@@ -66,30 +66,30 @@ export const ModuleDetail: React.FC<Props> = ({
     <div className="flex-1 space-y-6">
       {/* MODULE HEADER CARD */}
       <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl text-white">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
-          <div>
-            <span className="text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-5 pb-5 border-b border-slate-800">
+          <div className="space-y-1.5 min-w-0">
+            <span className="inline-block text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
               {module.tag}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-white mt-2">{module.title}</h2>
-            <p className="text-xs font-bold text-slate-400 tracking-wider uppercase mt-0.5">{module.subtitle}</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">{module.title}</h2>
+            <p className="text-xs font-bold text-slate-400 tracking-wider uppercase">{module.subtitle}</p>
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 w-full xl:w-auto">
             <button
               onClick={() => setActiveStep('game')}
-              className="flex-1 md:flex-none bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-5 py-2.5 rounded-2xl shadow-lg transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2 text-sm"
+              className="flex-1 sm:flex-none whitespace-nowrap bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-5 py-2.5 rounded-2xl shadow-lg transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2 text-sm shrink-0"
             >
-              <Play className="w-4 h-4 fill-slate-950" />
+              <Play className="w-4 h-4 fill-slate-950 shrink-0" />
               <span>Launch Simulator</span>
             </button>
 
             <button
               onClick={onOpenWorksheet}
-              className="flex-1 md:flex-none bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold px-5 py-2.5 rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-2 text-sm"
+              className="flex-1 sm:flex-none whitespace-nowrap bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold px-5 py-2.5 rounded-2xl transition-all hover:border-slate-500 cursor-pointer flex items-center justify-center gap-2 text-sm shrink-0 shadow-sm"
             >
-              <FileText className="w-4 h-4 text-cyan-400" />
+              <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
               <span>Case Study Worksheet</span>
             </button>
           </div>

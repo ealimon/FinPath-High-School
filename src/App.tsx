@@ -67,21 +67,25 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
       {/* HEADER BAR */}
-      <Header
-        userStats={userStats}
-        onOpenAiTutor={() => setIsAiTutorOpen(true)}
-        soundEnabled={soundEnabled}
-        onToggleSound={() => setSoundEnabled(!soundEnabled)}
-      />
+      <div className="print:hidden">
+        <Header
+          userStats={userStats}
+          onOpenAiTutor={() => setIsAiTutorOpen(true)}
+          soundEnabled={soundEnabled}
+          onToggleSound={() => setSoundEnabled(!soundEnabled)}
+        />
+      </div>
 
       {/* TOP SUB-NAV TABS */}
-      <TopNav
-        activeTab={activeMainTab}
-        onSelectTab={setActiveMainTab}
-      />
+      <div className="print:hidden">
+        <TopNav
+          activeTab={activeMainTab}
+          onSelectTab={setActiveMainTab}
+        />
+      </div>
 
       {/* MAIN CONTAINER */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:m-0 print:max-w-none">
         {/* CURRICULUM MODULES TAB */}
         {activeMainTab === 'modules' && (
           <div className="flex flex-col lg:flex-row gap-8">
@@ -122,7 +126,7 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 print:hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
           <div>© 2026 FINPATH HIGH SCHOOL • Personal Finance & Adulting Preparation</div>
           <div className="flex gap-4 font-bold text-slate-400">

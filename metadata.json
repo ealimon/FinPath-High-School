@@ -1,0 +1,6 @@
+{
+  "name": "FinPath High: Personal Finance & Adulting Prep",
+  "description": "Comprehensive high school financial literacy portal featuring interactive curriculum modules, real-world calculators, case-study worksheets, and AI financial coaching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

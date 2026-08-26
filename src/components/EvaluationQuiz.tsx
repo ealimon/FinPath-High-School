@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { QuizQuestion } from '../types';
 import { CheckCircle2, XCircle, Sparkles, HelpCircle } from 'lucide-react';
 
 interface Props {
   questions: QuizQuestion[];
   onFinishQuiz: (scorePercent: number) => void;
+}
+
+interface PreparedQuestion {
+  originalQuestion: string;
+  options: { text: string; isCorrect: boolean }[];
+  explanation: string;
+}
+
+// Fisher-Yates shuffle helper
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => {
@@ -14,31 +30,52 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
   const [scoreCount, setScoreCount] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
 
-  const currentQ = questions[currentIdx];
+  // Randomize question sequence AND randomize answer options for each question whenever questions change or quiz resets
+  const randomizedQuiz: PreparedQuestion[] = useMemo(() => {
+    const prepared = questions.map((q) => {
+      const optionsWithMeta = q.options.map((text, idx) => ({
+        text,
+        isCorrect: idx === q.correctIndex
+      }));
+      return {
+        originalQuestion: q.question,
+        options: shuffleArray(optionsWithMeta),
+        explanation: q.explanation
+      };
+    });
+    return shuffleArray(prepared);
+  }, [questions]);
+
+  const currentQ = randomizedQuiz[currentIdx];
 
   const handleSelectOption = (idx: number) => {
-    if (isAnswered) return;
+    if (isAnswered || !currentQ) return;
     setSelectedOpt(idx);
     setIsAnswered(true);
 
-    if (idx === currentQ.correctIndex) {
+    if (currentQ.options[idx]?.isCorrect) {
       setScoreCount((prev) => prev + 1);
     }
   };
 
   const handleNextQuestion = () => {
-    if (currentIdx < questions.length - 1) {
+    if (currentIdx < randomizedQuiz.length - 1) {
       setCurrentIdx((prev) => prev + 1);
       setSelectedOpt(null);
       setIsAnswered(false);
     } else {
       setQuizFinished(true);
-      const scorePct = Math.round(((scoreCount + (selectedOpt === currentQ.correctIndex ? 0 : 0)) / questions.length) * 100);
+      const isLastCorrect = selectedOpt !== null && currentQ.options[selectedOpt]?.isCorrect;
+      // Final calculated score
+      const finalScoreCount = isLastCorrect ? scoreCount : scoreCount;
+      const scorePct = Math.round((finalScoreCount / randomizedQuiz.length) * 100);
       onFinishQuiz(scorePct);
     }
   };
 
-  const scorePct = Math.round((scoreCount / questions.length) * 100);
+  const scorePct = Math.round((scoreCount / randomizedQuiz.length) * 100);
+
+  if (!currentQ) return null;
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl text-white max-w-2xl mx-auto space-y-6">
@@ -48,25 +85,28 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
           <span>EVALUATION QUIZ</span>
         </div>
         <div className="text-xs text-slate-400 font-mono font-bold">
-          Question {currentIdx + 1} of {questions.length}
+          Question {currentIdx + 1} of {randomizedQuiz.length}
         </div>
       </div>
 
       {!quizFinished ? (
         <div className="space-y-6">
           <h3 className="text-xl font-black text-white leading-snug">
-            {currentQ.question}
+            {currentQ.originalQuestion}
           </h3>
 
           {/* Options */}
           <div className="space-y-3">
-            {currentQ.options.map((optionText, optIdx) => {
+            {currentQ.options.map((opt, optIdx) => {
+              const isSelected = selectedOpt === optIdx;
+              const isCorrect = opt.isCorrect;
+
               let optStyle = 'bg-slate-800/80 border-slate-700 hover:border-slate-500 text-slate-200';
 
               if (isAnswered) {
-                if (optIdx === currentQ.correctIndex) {
+                if (isCorrect) {
                   optStyle = 'bg-emerald-950/80 border-emerald-500 text-emerald-300 font-bold';
-                } else if (selectedOpt === optIdx) {
+                } else if (isSelected && !isCorrect) {
                   optStyle = 'bg-rose-950/80 border-rose-500 text-rose-300 font-bold';
                 } else {
                   optStyle = 'bg-slate-900 border-slate-800 opacity-50 text-slate-500';
@@ -80,11 +120,11 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
                   disabled={isAnswered}
                   className={`w-full p-4 rounded-2xl border-2 text-left text-sm transition-all flex items-center justify-between cursor-pointer ${optStyle}`}
                 >
-                  <span>{optionText}</span>
-                  {isAnswered && optIdx === currentQ.correctIndex && (
+                  <span>{opt.text}</span>
+                  {isAnswered && isCorrect && (
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                   )}
-                  {isAnswered && selectedOpt === optIdx && optIdx !== currentQ.correctIndex && (
+                  {isAnswered && isSelected && !isCorrect && (
                     <XCircle className="w-5 h-5 text-rose-400 shrink-0" />
                   )}
                 </button>
@@ -107,7 +147,7 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
                 onClick={handleNextQuestion}
                 className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-6 py-3 rounded-2xl shadow-lg transition-all hover:scale-105 cursor-pointer flex items-center gap-2 text-sm"
               >
-                <span>{currentIdx < questions.length - 1 ? 'Next Question' : 'View Results'}</span>
+                <span>{currentIdx < randomizedQuiz.length - 1 ? 'Next Question' : 'View Results'}</span>
                 <Sparkles className="w-4 h-4 fill-slate-950" />
               </button>
             </div>

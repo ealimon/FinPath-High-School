@@ -10,10 +10,10 @@ export const CheckWriterAndATM: React.FC<Props> = ({ onCompleteGame }) => {
   const [activeTab, setActiveTab] = useState<'check' | 'atm'>('check');
 
   // Check state
-  const [payee, setPayee] = useState('FinKid High Apartments');
-  const [amount, setAmount] = useState('450.00');
-  const [memo, setMemo] = useState('First Month Rent');
-  const [signature, setSignature] = useState('Alex Student');
+  const [payee, setPayee] = useState('');
+  const [amount, setAmount] = useState('');
+  const [memo, setMemo] = useState('');
+  const [signature, setSignature] = useState('');
   const [checkProcessed, setCheckProcessed] = useState(false);
 
   // ATM Account balances
@@ -242,7 +242,7 @@ export const CheckWriterAndATM: React.FC<Props> = ({ onCompleteGame }) => {
                 className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 px-6 py-3 rounded-xl font-black flex items-center gap-2 transition-all shadow-lg hover:scale-105 cursor-pointer"
               >
                 <Sparkles className="w-5 h-5" />
-                Sign & Process Check (${amount})
+                Sign & Process Check ${amount ? "($" + amount + ")" : ""}
               </button>
             )}
           </div>

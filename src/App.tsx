@@ -65,7 +65,7 @@ export default function App() {
   const selectedModule = modules.find((m) => m.id === selectedModuleId) || modules[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased print:bg-white print:text-black print:min-h-0 print:h-auto selection:bg-cyan-500 selection:text-slate-950">
       {/* HEADER BAR */}
       <div className="print:hidden">
         <Header

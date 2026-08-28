@@ -47,7 +47,7 @@ export const WorksheetsView: React.FC<Props> = ({ modules, selectedModuleId }) =
       </div>
 
       {/* WORKSHEET PRINTABLE CONTAINER */}
-      <div className="bg-white text-slate-900 rounded-3xl p-8 sm:p-10 shadow-2xl border-4 border-slate-200 space-y-5 print:shadow-none print:border-none print:p-0 print:m-0 print:space-y-3.5 print:text-black">
+      <div className="bg-white text-slate-900 rounded-3xl p-8 sm:p-10 shadow-2xl border-4 border-slate-200 space-y-5 print:shadow-none print:border-none print:p-0 print:m-0 print:space-y-3.5 print:text-black print:rounded-none print:bg-white">
         {/* Printable Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b-2 border-slate-200 print:pb-2 print:border-slate-800">
           <div>

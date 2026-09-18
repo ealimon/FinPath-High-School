@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Play, FileText, CheckCircle2, BookOpen, Sparkles, Award, ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, FileText, CheckCircle2, BookOpen, Sparkles, Award, ArrowRight, ArrowLeft, LayoutGrid, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ModuleData } from '../types';
 import { CheckWriterAndATM } from './simulations/CheckWriterAndATM';
 import { BudgetPlanner503020 } from './simulations/BudgetPlanner503020';
@@ -15,6 +15,9 @@ interface Props {
   module: ModuleData;
   onOpenWorksheet: () => void;
   onCompleteModule: () => void;
+  onBackToModules?: () => void;
+  onSelectModule?: (id: number) => void;
+  totalModules?: number;
 }
 
 export type ModuleStep = 'tutorial' | 'game' | 'evaluation' | 'completed';
@@ -23,9 +26,18 @@ export const ModuleDetail: React.FC<Props> = ({
   module,
   onOpenWorksheet,
   onCompleteModule,
+  onBackToModules,
+  onSelectModule,
+  totalModules = 10,
 }) => {
   const [activeStep, setActiveStep] = useState<ModuleStep>('tutorial');
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  // Reset step and slide when switching modules
+  useEffect(() => {
+    setActiveStep('tutorial');
+    setCurrentSlideIndex(0);
+  }, [module.id]);
 
   const steps = [
     { id: 'tutorial' as ModuleStep, num: 1, label: 'Core Guide', icon: BookOpen },
@@ -64,6 +76,55 @@ export const ModuleDetail: React.FC<Props> = ({
 
   return (
     <div className="flex-1 space-y-6">
+      {/* TOP NAVIGATION BAR TO RETURN TO 2X5 MODULES GRID */}
+      {onBackToModules && (
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl text-white shadow-md">
+          <button
+            onClick={onBackToModules}
+            className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-300 text-slate-200 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-2 border border-slate-700 transition-all cursor-pointer shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4 text-cyan-400" />
+            <LayoutGrid className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Back to All Modules (2 Columns of 5)</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono text-slate-400 font-bold px-2 py-1 bg-slate-950 rounded-lg border border-slate-800">
+              Module {module.id} of {totalModules}
+            </span>
+
+            {onSelectModule && (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => onSelectModule(module.id - 1)}
+                  disabled={module.id <= 1}
+                  className={`p-2 rounded-xl text-xs border transition-all ${
+                    module.id <= 1
+                      ? 'border-slate-800 text-slate-700 cursor-not-allowed'
+                      : 'border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white cursor-pointer'
+                  }`}
+                  title="Previous Module"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onSelectModule(module.id + 1)}
+                  disabled={module.id >= totalModules}
+                  className={`p-2 rounded-xl text-xs border transition-all ${
+                    module.id >= totalModules
+                      ? 'border-slate-800 text-slate-700 cursor-not-allowed'
+                      : 'border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white cursor-pointer'
+                  }`}
+                  title="Next Module"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* MODULE HEADER CARD */}
       <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl text-white">
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-5 pb-5 border-b border-slate-800">
@@ -237,13 +298,35 @@ export const ModuleDetail: React.FC<Props> = ({
             </p>
           </div>
 
-          <button
-            onClick={onOpenWorksheet}
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-8 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer inline-flex items-center gap-2 text-sm"
-          >
-            <FileText className="w-5 h-5" />
-            View Printable Case Study Worksheet
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            {onSelectModule && module.id < totalModules && (
+              <button
+                onClick={() => onSelectModule(module.id + 1)}
+                className="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black px-8 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer inline-flex items-center gap-2 text-sm"
+              >
+                <span>Continue to Module {module.id + 1}</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            )}
+
+            {onBackToModules && (
+              <button
+                onClick={onBackToModules}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-7 py-3.5 rounded-2xl transition-all hover:border-slate-500 cursor-pointer inline-flex items-center gap-2 text-sm"
+              >
+                <LayoutGrid className="w-5 h-5 text-cyan-400" />
+                <span>All Modules (2 Columns of 5)</span>
+              </button>
+            )}
+
+            <button
+              onClick={onOpenWorksheet}
+              className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-7 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer inline-flex items-center gap-2 text-sm"
+            >
+              <FileText className="w-5 h-5" />
+              <span>Printable Case Study</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

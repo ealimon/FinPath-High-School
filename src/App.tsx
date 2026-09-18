@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { TopNav, MainTab } from './components/TopNav';
-import { Sidebar } from './components/Sidebar';
+import { ModulesGridView } from './components/ModulesGridView';
 import { ModuleDetail } from './components/ModuleDetail';
 import { CalculatorsView } from './components/CalculatorsView';
 import { ReadinessTrackerView } from './components/ReadinessTrackerView';
@@ -21,9 +21,24 @@ export default function App() {
   });
 
   const [activeMainTab, setActiveMainTab] = useState<MainTab>('modules');
+  const [moduleViewMode, setModuleViewMode] = useState<'grid' | 'detail'>('grid');
   const [selectedModuleId, setSelectedModuleId] = useState<number>(1);
   const [isAiTutorOpen, setIsAiTutorOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+
+  const handleSelectTab = (tab: MainTab) => {
+    if (tab === 'modules' && activeMainTab === 'modules' && moduleViewMode === 'detail') {
+      // If clicking curriculum modules while in detail, return to 2 columns of 5 overview
+      setModuleViewMode('grid');
+    }
+    setActiveMainTab(tab);
+  };
+
+  const handleSelectModuleFromGrid = (id: number) => {
+    setSelectedModuleId(id);
+    setModuleViewMode('detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Completion handler
   const handleCompleteModule = () => {
@@ -80,7 +95,7 @@ export default function App() {
       <div className="print:hidden">
         <TopNav
           activeTab={activeMainTab}
-          onSelectTab={setActiveMainTab}
+          onSelectTab={handleSelectTab}
         />
       </div>
 
@@ -88,18 +103,23 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:m-0 print:max-w-none">
         {/* CURRICULUM MODULES TAB */}
         {activeMainTab === 'modules' && (
-          <div className="flex flex-col lg:flex-row gap-8">
-            <Sidebar
-              modules={modules}
-              selectedModuleId={selectedModuleId}
-              onSelectModule={(id) => setSelectedModuleId(id)}
-            />
-
-            <ModuleDetail
-              module={selectedModule}
-              onOpenWorksheet={() => setActiveMainTab('worksheets')}
-              onCompleteModule={handleCompleteModule}
-            />
+          <div>
+            {moduleViewMode === 'grid' ? (
+              <ModulesGridView
+                modules={modules}
+                selectedModuleId={selectedModuleId}
+                onSelectModule={handleSelectModuleFromGrid}
+              />
+            ) : (
+              <ModuleDetail
+                module={selectedModule}
+                onOpenWorksheet={() => setActiveMainTab('worksheets')}
+                onCompleteModule={handleCompleteModule}
+                onBackToModules={() => setModuleViewMode('grid')}
+                onSelectModule={(id) => setSelectedModuleId(id)}
+                totalModules={modules.length}
+              />
+            )}
           </div>
         )}
 
@@ -120,6 +140,7 @@ export default function App() {
             onNavigateToModule={(id) => {
               setSelectedModuleId(id);
               setActiveMainTab('modules');
+              setModuleViewMode('detail');
             }}
           />
         )}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Play, BookOpen, ArrowRight, Sparkles, Compass } from 'lucide-react';
+import { CheckCircle2, Play, BookOpen, ArrowRight } from 'lucide-react';
 import { ModuleData } from '../types';
 
 interface Props {
@@ -21,9 +21,6 @@ export const ModulesGridView: React.FC<Props> = ({
   const totalCount = modules.length;
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
-  // Find the next recommended module to study (first not-done module, or module 1)
-  const nextUpModule = modules.find((m) => m.status !== 'DONE') || modules[0];
-
   // Filter modules based on user choice
   const filteredModules = modules.filter((m) => {
     if (filter === 'foundations') return m.id <= 5;
@@ -33,54 +30,31 @@ export const ModulesGridView: React.FC<Props> = ({
   });
 
   return (
-    <div className="space-y-8">
-      {/* CALM FOCUS CARD: CONTINUE WHERE YOU LEFT OFF */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/60">
-              <Compass className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Recommended Next Lesson</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
-              Module {nextUpModule.id}: {nextUpModule.title}
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {nextUpModule.subtitle}. Learn the core principles, try the interactive practice simulator, and master this life skill!
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row md:flex-col items-stretch sm:items-center md:items-end gap-3 w-full md:w-auto shrink-0">
-            <button
-              onClick={() => onSelectModule(nextUpModule.id)}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-sm transition-all hover:scale-102 flex items-center justify-center gap-2 cursor-pointer text-sm"
-            >
-              <span>{nextUpModule.status === 'DONE' ? 'Review Lesson' : 'Continue Lesson'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <span className="text-xs text-slate-500 text-center md:text-right">
-              ~10–15 minutes • Interactive simulator included
-            </span>
-          </div>
+    <div className="space-y-6">
+      {/* CURRICULUM OVERVIEW HEADER */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Financial Literacy Curriculum</h2>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Explore practical life skills modules at your own comfortable pace.
+          </p>
         </div>
 
-        {/* PROGRESS OVERVIEW BAR */}
-        <div className="mt-6 pt-6 border-t border-slate-100 space-y-2">
-          <div className="flex justify-between items-center text-xs font-medium text-slate-600">
-            <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
-              <BookOpen className="w-3.5 h-3.5 text-emerald-700" />
-              Your Learning Journey
-            </span>
-            <span className="text-emerald-800 font-semibold font-mono">
-              {completedCount} of {totalCount} lessons completed ({progressPercent}%)
-            </span>
+        <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/80 px-4 py-2.5 rounded-xl w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-emerald-700" />
+            <div>
+              <div className="text-[11px] text-slate-500 font-medium">Curriculum Progress</div>
+              <div className="text-xs sm:text-sm font-bold text-slate-800 font-mono">{completedCount} of {totalCount} Completed</div>
+            </div>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div className="w-24 sm:w-32 bg-slate-200 rounded-full h-2 overflow-hidden ml-2">
             <div
               className="bg-emerald-600 h-full rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
+          <span className="text-xs font-semibold text-emerald-800 font-mono">{progressPercent}%</span>
         </div>
       </div>
 

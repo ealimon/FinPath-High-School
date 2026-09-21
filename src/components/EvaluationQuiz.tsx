@@ -30,7 +30,7 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
   const [scoreCount, setScoreCount] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
 
-  // Randomize question sequence AND randomize answer options for each question whenever questions change or quiz resets
+  // Randomize question sequence and answer options
   const randomizedQuiz: PreparedQuestion[] = useMemo(() => {
     const prepared = questions.map((q) => {
       const optionsWithMeta = q.options.map((text, idx) => ({
@@ -66,7 +66,6 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
     } else {
       setQuizFinished(true);
       const isLastCorrect = selectedOpt !== null && currentQ.options[selectedOpt]?.isCorrect;
-      // Final calculated score
       const finalScoreCount = isLastCorrect ? scoreCount : scoreCount;
       const scorePct = Math.round((finalScoreCount / randomizedQuiz.length) * 100);
       onFinishQuiz(scorePct);
@@ -78,20 +77,20 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
   if (!currentQ) return null;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl text-white max-w-2xl mx-auto space-y-6">
-      <div className="flex justify-between items-center border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
-          <HelpCircle className="w-5 h-5 text-cyan-400" />
-          <span>EVALUATION QUIZ</span>
+    <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs text-slate-800 max-w-2xl mx-auto space-y-6">
+      <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
+          <HelpCircle className="w-4 h-4 text-emerald-700" />
+          <span>Knowledge Check</span>
         </div>
-        <div className="text-xs text-slate-400 font-mono font-bold">
+        <div className="text-xs text-slate-500 font-medium">
           Question {currentIdx + 1} of {randomizedQuiz.length}
         </div>
       </div>
 
       {!quizFinished ? (
         <div className="space-y-6">
-          <h3 className="text-xl font-black text-white leading-snug">
+          <h3 className="text-lg font-bold text-slate-800 leading-snug">
             {currentQ.originalQuestion}
           </h3>
 
@@ -101,15 +100,15 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
               const isSelected = selectedOpt === optIdx;
               const isCorrect = opt.isCorrect;
 
-              let optStyle = 'bg-slate-800/80 border-slate-700 hover:border-slate-500 text-slate-200';
+              let optStyle = 'bg-slate-50/70 border-slate-200 hover:border-emerald-300 hover:bg-white text-slate-700';
 
               if (isAnswered) {
                 if (isCorrect) {
-                  optStyle = 'bg-emerald-950/80 border-emerald-500 text-emerald-300 font-bold';
+                  optStyle = 'bg-emerald-50 border-emerald-400 text-emerald-900 font-semibold';
                 } else if (isSelected && !isCorrect) {
-                  optStyle = 'bg-rose-950/80 border-rose-500 text-rose-300 font-bold';
+                  optStyle = 'bg-rose-50 border-rose-300 text-rose-900 font-semibold';
                 } else {
-                  optStyle = 'bg-slate-900 border-slate-800 opacity-50 text-slate-500';
+                  optStyle = 'bg-slate-50/50 border-slate-100 opacity-50 text-slate-400';
                 }
               }
 
@@ -118,37 +117,37 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
                   key={optIdx}
                   onClick={() => handleSelectOption(optIdx)}
                   disabled={isAnswered}
-                  className={`w-full p-4 rounded-2xl border-2 text-left text-sm transition-all flex items-center justify-between cursor-pointer ${optStyle}`}
+                  className={`w-full p-4 rounded-xl border text-left text-sm transition-all flex items-center justify-between cursor-pointer ${optStyle}`}
                 >
                   <span>{opt.text}</span>
                   {isAnswered && isCorrect && (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 ml-2" />
                   )}
                   {isAnswered && isSelected && !isCorrect && (
-                    <XCircle className="w-5 h-5 text-rose-400 shrink-0" />
+                    <XCircle className="w-5 h-5 text-rose-500 shrink-0 ml-2" />
                   )}
                 </button>
               );
             })}
           </div>
 
-          {/* Explanation Banner */}
+          {/* Explanation Box */}
           {isAnswered && (
-            <div className="bg-slate-800/90 border border-cyan-800/60 p-4 rounded-2xl text-xs text-slate-300 space-y-1">
-              <span className="font-bold text-cyan-400 block">💡 Explanation:</span>
-              <p>{currentQ.explanation}</p>
+            <div className="bg-amber-50/80 border border-amber-200/80 p-4 rounded-xl text-xs text-amber-950 space-y-1">
+              <span className="font-bold text-amber-900 block">💡 Explanation:</span>
+              <p className="leading-relaxed">{currentQ.explanation}</p>
             </div>
           )}
 
           {/* Next Button */}
           {isAnswered && (
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <button
                 onClick={handleNextQuestion}
-                className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-6 py-3 rounded-2xl shadow-lg transition-all hover:scale-105 cursor-pointer flex items-center gap-2 text-sm"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2 text-sm"
               >
                 <span>{currentIdx < randomizedQuiz.length - 1 ? 'Next Question' : 'View Results'}</span>
-                <Sparkles className="w-4 h-4 fill-slate-950" />
+                <Sparkles className="w-4 h-4" />
               </button>
             </div>
           )}
@@ -156,20 +155,20 @@ export const EvaluationQuiz: React.FC<Props> = ({ questions, onFinishQuiz }) => 
       ) : (
         /* Quiz Complete Screen */
         <div className="text-center py-6 space-y-4">
-          <div className="text-5xl mb-2">{scorePct >= 70 ? '🎉' : '📚'}</div>
-          <h3 className="text-2xl font-black text-white">Evaluation Complete!</h3>
-          <div className="text-3xl font-black text-cyan-400 font-mono">{scorePct}% Score</div>
-          <p className="text-sm text-slate-300 max-w-sm mx-auto">
+          <div className="text-4xl mb-2">{scorePct >= 70 ? '🌱' : '📖'}</div>
+          <h3 className="text-2xl font-bold text-slate-800">Quiz Completed!</h3>
+          <div className="text-3xl font-bold text-emerald-700 font-mono">{scorePct}%</div>
+          <p className="text-sm text-slate-600 max-w-sm mx-auto">
             {scorePct >= 70
-              ? 'Awesome job! You demonstrated solid financial knowledge and unlocked the badge claim step!'
-              : 'Good try! Review the tutorial book slides and try again to unlock your badge!'}
+              ? 'Great job! You have a solid grasp of this concept.'
+              : 'Nice effort! Review the guide slides whenever you like to strengthen this skill.'}
           </p>
 
           <button
             onClick={() => onFinishQuiz(scorePct)}
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-8 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer text-sm"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-8 py-3 rounded-xl shadow-xs transition-all cursor-pointer text-sm"
           >
-            Continue to Badges
+            Finish & Record Progress
           </button>
         </div>
       )}

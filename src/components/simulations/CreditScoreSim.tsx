@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Sparkles, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface Props {
   onCompleteGame: (earnedCoins: number, earnedXp: number) => void;
@@ -9,105 +9,117 @@ export const CreditScoreSim: React.FC<Props> = ({ onCompleteGame }) => {
   const [score, setScore] = useState(680);
   const [balance, setBalance] = useState(250);
   const [creditLimit] = useState(1000);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([
-    'Account opened with $1,000 limit',
+    'Account opened with $1,000 credit limit',
     'On-time payment recorded (+10 pts)'
   ]);
 
   const handlePayFull = () => {
+    setErrorMessage(null);
     setBalance(0);
     setScore(prev => Math.min(850, prev + 25));
-    setHistory(prev => ['Paid statement in FULL! 0% interest charged (+25 pts)', ...prev]);
+    setHistory(prev => ['Paid statement balance in full. $0 interest charged (+25 pts)', ...prev]);
   };
 
   const handlePayMinimum = () => {
-    setBalance(prev => Math.round(prev * 1.18)); // 18% APR interest hit
+    setErrorMessage(null);
+    setBalance(prev => Math.round(prev * 1.18)); // 18% APR interest
     setScore(prev => Math.max(300, prev - 15));
-    setHistory(prev => ['Paid minimum only. 18% APR interest added (-15 pts)', ...prev]);
+    setHistory(prev => ['Paid minimum only. Interest added to remaining balance (-15 pts)', ...prev]);
   };
 
   const handleMakePurchase = () => {
+    setErrorMessage(null);
     if (balance + 300 > creditLimit) {
-      alert('Transaction Declined: Credit limit exceeded!');
+      setErrorMessage('Purchase declined: This purchase would exceed your $1,000 credit limit.');
       return;
     }
     setBalance(prev => prev + 300);
-    setHistory(prev => ['Purchased concert ticket ($300)', ...prev]);
+    setHistory(prev => ['Purchased school supplies & tech ($300)', ...prev]);
   };
 
   const utilizationPct = Math.round((balance / creditLimit) * 100);
 
   return (
-    <div className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl max-w-3xl mx-auto my-4 space-y-6">
+    <div className="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs max-w-3xl mx-auto my-4 space-y-6">
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-purple-500/20 text-purple-400 rounded-xl border border-purple-500/30">
-          <ShieldCheck className="w-6 h-6" />
+        <div className="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center border border-emerald-200/80 shrink-0">
+          <ShieldCheck className="w-5 h-5 text-emerald-800" />
         </div>
         <div>
-          <h3 className="text-xl font-black">Credit Score & APR Simulator</h3>
-          <p className="text-xs text-slate-400">Keep your score in the Excellent 750+ zone by managing card utilization and paying in full!</p>
+          <h3 className="text-xl font-bold text-slate-800">Credit Score & Interest Simulator</h3>
+          <p className="text-xs text-slate-500">Practice keeping your score in the Good/Excellent zone (720+) by keeping utilization low and paying in full.</p>
         </div>
       </div>
 
       {/* Credit Gauge */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">FICO® Credit Score</div>
-          <div className={`text-3xl font-black mt-1 ${
-            score >= 750 ? 'text-emerald-400' : score >= 670 ? 'text-cyan-400' : 'text-amber-400'
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">Credit Score</div>
+          <div className={`text-3xl font-bold mt-1 font-mono ${
+            score >= 750 ? 'text-emerald-700' : score >= 670 ? 'text-slate-800' : 'text-amber-700'
           }`}>{score} / 850</div>
-          <div className="text-[11px] text-slate-400 mt-1 font-bold">
-            {score >= 750 ? '🌟 EXCELLENT' : score >= 670 ? '👍 GOOD' : '⚠️ FAIR'}
+          <div className="text-[11px] text-slate-500 mt-1 font-semibold">
+            {score >= 750 ? 'Excellent' : score >= 670 ? 'Good' : 'Needs Attention'}
           </div>
         </div>
 
-        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">Card Balance</div>
-          <div className="text-2xl font-black text-white mt-1">${balance}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Limit: ${creditLimit}</div>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">Card Balance</div>
+          <div className="text-2xl font-bold text-slate-800 mt-1 font-mono">${balance}</div>
+          <div className="text-[11px] text-slate-400 mt-1">Total Limit: ${creditLimit}</div>
         </div>
 
-        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">Utilization</div>
-          <div className={`text-2xl font-black mt-1 ${utilizationPct <= 30 ? 'text-emerald-400' : 'text-amber-400'}`}>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">Credit Utilization</div>
+          <div className={`text-2xl font-bold mt-1 font-mono ${utilizationPct <= 30 ? 'text-emerald-700' : 'text-amber-700'}`}>
             {utilizationPct}%
           </div>
-          <div className="text-[11px] text-slate-400 mt-1">{utilizationPct <= 30 ? 'Target < 30%' : 'High Utilization!'}</div>
+          <div className="text-[11px] text-slate-500 mt-1">{utilizationPct <= 30 ? 'Healthy (< 30%)' : 'High Utilization'}</div>
         </div>
       </div>
+
+      {/* Error alert if any */}
+      {errorMessage && (
+        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
           onClick={handlePayFull}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold p-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-2"
+          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 font-semibold p-3 rounded-xl text-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
         >
-          <CheckCircle2 className="w-4 h-4" />
-          Pay Full Statement ($0 Interest)
+          <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+          <span>Pay Full Balance ($0 Interest)</span>
         </button>
 
         <button
           onClick={handlePayMinimum}
-          className="bg-amber-600 hover:bg-amber-500 text-white font-bold p-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-2"
+          className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-semibold p-3 rounded-xl text-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
         >
-          <AlertTriangle className="w-4 h-4" />
-          Pay Minimum Only (Adds Interest)
+          <AlertTriangle className="w-4 h-4 text-amber-700" />
+          <span>Pay Minimum (Incurs Interest)</span>
         </button>
 
         <button
           onClick={handleMakePurchase}
-          className="bg-slate-700 hover:bg-slate-600 text-white font-bold p-3 rounded-xl text-xs transition-all cursor-pointer"
+          className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold p-3 rounded-xl text-xs transition-colors cursor-pointer"
         >
-          + Buy Something ($300)
+          + Add Purchase ($300)
         </button>
       </div>
 
       {/* History Log */}
-      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 space-y-1 max-h-32 overflow-y-auto">
-        <div className="text-slate-500 text-[10px] uppercase font-sans mb-1 font-bold">Activity Log:</div>
+      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1.5 max-h-32 overflow-y-auto font-sans">
+        <div className="text-slate-400 text-[11px] font-semibold mb-1">Recent Activity Log:</div>
         {history.map((item, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <span className="text-cyan-400">•</span>
+            <span className="text-emerald-700 font-bold">•</span>
             <span>{item}</span>
           </div>
         ))}
@@ -117,14 +129,14 @@ export const CreditScoreSim: React.FC<Props> = ({ onCompleteGame }) => {
         <button
           onClick={() => onCompleteGame(50, 50)}
           disabled={score < 720}
-          className={`px-6 py-3 rounded-xl font-black flex items-center gap-2 transition-all ${
+          className={`px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all text-xs sm:text-sm ${
             score >= 720
-              ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 text-white shadow-lg cursor-pointer hover:scale-105'
-              : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+              ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs cursor-pointer'
+              : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
           }`}
         >
-          <Sparkles className="w-5 h-5" />
-          {score >= 720 ? 'Complete Credit Challenge (+50 Coins & +50 XP)' : 'Reach 720+ Score to Win'}
+          <Sparkles className="w-4 h-4" />
+          <span>{score >= 720 ? 'Complete Practice & Continue' : 'Reach 720+ Score to Complete'}</span>
         </button>
       </div>
     </div>

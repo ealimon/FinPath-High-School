@@ -1,5 +1,5 @@
-import React from 'react';
-import { CheckCircle2, Play, BookOpen, Sparkles, ArrowRight, ShieldCheck, Award } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, Play, BookOpen, ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { ModuleData } from '../types';
 
 interface Props {
@@ -8,218 +8,215 @@ interface Props {
   onSelectModule: (id: number) => void;
 }
 
+type FilterCategory = 'all' | 'foundations' | 'real-world' | 'completed';
+
 export const ModulesGridView: React.FC<Props> = ({
   modules,
   selectedModuleId,
   onSelectModule,
 }) => {
+  const [filter, setFilter] = useState<FilterCategory>('all');
+
   const completedCount = modules.filter((m) => m.status === 'DONE').length;
   const totalCount = modules.length;
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
-  // Divide modules into two columns of 5:
-  // Column 1: Modules 1 to 5
-  // Column 2: Modules 6 to 10
-  const column1Modules = modules.slice(0, 5);
-  const column2Modules = modules.slice(5, 10);
+  // Find the next recommended module to study (first not-done module, or module 1)
+  const nextUpModule = modules.find((m) => m.status !== 'DONE') || modules[0];
 
-  const getSimulatorLabel = (gameType: string) => {
-    switch (gameType) {
-      case 'paycheck':
-        return 'Paycheck & Tax Deductions Sim';
-      case 'banking':
-        return 'Paper Check Writer & ATM Sim';
-      case 'budget':
-        return '50/30/20 Budgeting Planner';
-      case 'credit':
-        return 'FICO Credit Score Simulator';
-      case 'compound':
-        return 'Roth IRA & Compound Growth';
-      default:
-        return 'Interactive Financial Simulator';
-    }
-  };
-
-  const renderModuleCard = (mod: ModuleData) => {
-    const isDone = mod.status === 'DONE';
-    const isSelected = mod.id === selectedModuleId;
-
-    return (
-      <div
-        key={mod.id}
-        onClick={() => onSelectModule(mod.id)}
-        className={`group text-left p-5 rounded-3xl border-2 transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
-          isSelected
-            ? 'bg-slate-900 border-cyan-400 shadow-xl shadow-cyan-500/10 scale-[1.01]'
-            : 'bg-slate-900/90 border-slate-800 hover:border-cyan-500/60 hover:bg-slate-850 hover:shadow-lg hover:shadow-cyan-950/30 hover:scale-[1.01]'
-        }`}
-      >
-        {/* TOP META ROW */}
-        <div>
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-black text-slate-950 bg-cyan-400 px-2.5 py-0.5 rounded-lg tracking-wider font-mono">
-                MODULE {mod.id}
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-cyan-950/90 border border-cyan-800/80 px-2 py-0.5 rounded-md">
-                {mod.tag}
-              </span>
-            </div>
-
-            <div className="shrink-0">
-              {isDone ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-700/80 px-2.5 py-1 rounded-full shadow-sm">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>COMPLETED</span>
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-full">
-                  <Play className="w-3 h-3 fill-cyan-400" />
-                  <span>AVAILABLE</span>
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* TITLE & SUBTITLE */}
-          <h3 className="font-black text-lg text-white group-hover:text-cyan-300 transition-colors leading-snug">
-            {mod.title}
-          </h3>
-          <p className="text-xs text-slate-400 uppercase tracking-wide font-medium mt-1 mb-3">
-            {mod.subtitle}
-          </p>
-
-          {/* KEY CONCEPTS BULLETS */}
-          <div className="space-y-1.5 my-3 pt-3 border-t border-slate-800/80">
-            {mod.learningConcepts.slice(0, 2).map((concept, idx) => (
-              <div key={idx} className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed">
-                <span className="text-cyan-400 shrink-0 font-bold">•</span>
-                <span className="line-clamp-2">{concept}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* BOTTOM ACTION BAR */}
-        <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-3">
-          <span className="text-[11px] font-semibold text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60 truncate">
-            🎮 {getSimulatorLabel(mod.gameType)}
-          </span>
-
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all shrink-0 ${
-              isDone
-                ? 'bg-slate-800 text-slate-200 group-hover:bg-slate-700 group-hover:text-white border border-slate-700'
-                : 'bg-cyan-500 group-hover:bg-cyan-400 text-slate-950 shadow-md'
-            }`}
-          >
-            <span>{isDone ? 'Review Module' : 'Open Module'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-    );
-  };
+  // Filter modules based on user choice
+  const filteredModules = modules.filter((m) => {
+    if (filter === 'foundations') return m.id <= 5;
+    if (filter === 'real-world') return m.id > 5;
+    if (filter === 'completed') return m.status === 'DONE';
+    return true;
+  });
 
   return (
     <div className="space-y-8">
-      {/* CURRICULUM OVERVIEW & PROGRESS HEADER */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl text-white relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 pb-6 border-b border-slate-800">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>HIGH SCHOOL PERSONAL FINANCE & ADULTING CURRICULUM</span>
+      {/* CALM FOCUS CARD: CONTINUE WHERE YOU LEFT OFF */}
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/60">
+              <Compass className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Recommended Next Lesson</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-              10 Core Adulting Modules
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+              Module {nextUpModule.id}: {nextUpModule.title}
             </h2>
-            <p className="text-sm text-slate-300 max-w-2xl">
-              Select any module below to launch its core interactive guide, real-world simulation, and evaluation quiz.
+            <p className="text-sm text-slate-600 leading-relaxed">
+              {nextUpModule.subtitle}. Learn the core principles, try the interactive practice simulator, and master this life skill!
             </p>
           </div>
 
-          {/* PROGRESS SUMMARY BADGE */}
-          <div className="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-center gap-4 shrink-0 w-full lg:w-auto">
-            <div className="p-3 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl shrink-0">
-              <Award className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Overall Progress</div>
-              <div className="text-xl font-black text-white font-mono flex items-center gap-2">
-                <span>{completedCount} of {totalCount} Done</span>
-                <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                  {progressPercent}%
-                </span>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row md:flex-col items-stretch sm:items-center md:items-end gap-3 w-full md:w-auto shrink-0">
+            <button
+              onClick={() => onSelectModule(nextUpModule.id)}
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-sm transition-all hover:scale-102 flex items-center justify-center gap-2 cursor-pointer text-sm"
+            >
+              <span>{nextUpModule.status === 'DONE' ? 'Review Lesson' : 'Continue Lesson'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <span className="text-xs text-slate-500 text-center md:text-right">
+              ~10–15 minutes • Interactive simulator included
+            </span>
           </div>
         </div>
 
-        {/* PROGRESS BAR */}
-        <div className="pt-5 space-y-2">
-          <div className="flex justify-between items-center text-xs font-bold text-slate-400">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-              Curriculum Mastery Roadmap
+        {/* PROGRESS OVERVIEW BAR */}
+        <div className="mt-6 pt-6 border-t border-slate-100 space-y-2">
+          <div className="flex justify-between items-center text-xs font-medium text-slate-600">
+            <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
+              <BookOpen className="w-3.5 h-3.5 text-emerald-700" />
+              Your Learning Journey
             </span>
-            <span className="text-cyan-400 font-mono font-bold">{progressPercent}% High School Ready</span>
+            <span className="text-emerald-800 font-semibold font-mono">
+              {completedCount} of {totalCount} lessons completed ({progressPercent}%)
+            </span>
           </div>
-          <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800 p-0.5">
+          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700 shadow-sm shadow-cyan-500/50"
+              className="bg-emerald-600 h-full rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
       </div>
 
-      {/* TWO COLUMNS OF 5 MODULES */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* COLUMN 1: MODULES 1 TO 5 */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800 px-1">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-xs font-black font-mono">
-                1
-              </span>
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-white">
-                  PART 1: FOUNDATIONS (MODULES 1–5)
-                </h3>
-                <p className="text-[11px] text-slate-400">Paychecks, Banking, Budgeting, Credit & College</p>
-              </div>
-            </div>
-            <span className="text-xs font-mono text-cyan-400 font-bold">5 Modules</span>
-          </div>
-
-          <div className="space-y-4">
-            {column1Modules.map(renderModuleCard)}
-          </div>
+      {/* FILTER TABS (REDUCES OVERWHELM) */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-bold text-slate-800">All Curriculum Topics</h3>
+          <p className="text-xs text-slate-500">Pick any lesson to explore at your own comfortable pace.</p>
         </div>
 
-        {/* COLUMN 2: MODULES 6 TO 10 */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800 px-1">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-xs font-black font-mono">
-                2
-              </span>
+        {/* Filter Buttons */}
+        <div className="flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 self-stretch sm:self-auto overflow-x-auto">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              filter === 'all'
+                ? 'bg-white text-slate-800 shadow-xs'
+                : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            All (10)
+          </button>
+          <button
+            onClick={() => setFilter('foundations')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              filter === 'foundations'
+                ? 'bg-white text-slate-800 shadow-xs'
+                : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Foundations (1–5)
+          </button>
+          <button
+            onClick={() => setFilter('real-world')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              filter === 'real-world'
+                ? 'bg-white text-slate-800 shadow-xs'
+                : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Life Skills (6–10)
+          </button>
+          <button
+            onClick={() => setFilter('completed')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              filter === 'completed'
+                ? 'bg-white text-slate-800 shadow-xs'
+                : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Completed ({completedCount})
+          </button>
+        </div>
+      </div>
+
+      {/* CLEAN, SCANNABLE LESSON GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {filteredModules.map((mod) => {
+          const isDone = mod.status === 'DONE';
+          const isSelected = mod.id === selectedModuleId;
+
+          return (
+            <div
+              key={mod.id}
+              onClick={() => onSelectModule(mod.id)}
+              className={`text-left p-6 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between bg-white ${
+                isSelected
+                  ? 'border-emerald-500 shadow-md ring-1 ring-emerald-400/30'
+                  : 'border-slate-200/90 hover:border-emerald-300 hover:shadow-sm'
+              }`}
+            >
               <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-white">
-                  PART 2: REAL-WORLD INDEPENDENCE (MODULES 6–10)
-                </h3>
-                <p className="text-[11px] text-slate-400">Auto, Housing, Investing, Insurance & Defense</p>
+                {/* Header Row */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-lg">
+                      Lesson {mod.id}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium">
+                      {mod.tag}
+                    </span>
+                  </div>
+
+                  {isDone ? (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/70">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Completed</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
+                      <Play className="w-3 h-3 text-slate-400" />
+                      <span>Ready to start</span>
+                    </span>
+                  )}
+                </div>
+
+                {/* Title & Description */}
+                <h4 className="font-bold text-base text-slate-800 group-hover:text-emerald-700 transition-colors">
+                  {mod.title}
+                </h4>
+                <p className="text-xs text-slate-500 mt-1 mb-3">
+                  {mod.subtitle}
+                </p>
+
+                {/* Key Concepts */}
+                <div className="space-y-1.5 py-2.5 border-t border-slate-100 text-xs text-slate-600">
+                  {mod.learningConcepts.slice(0, 2).map((concept, idx) => (
+                    <div key={idx} className="flex items-start gap-2 leading-relaxed">
+                      <span className="text-emerald-600 font-bold shrink-0">•</span>
+                      <span className="line-clamp-2">{concept}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Action */}
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                <span className="text-xs text-slate-500">
+                  Interactive practice
+                </span>
+
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    isDone
+                      ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      : 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs'
+                  }`}
+                >
+                  <span>{isDone ? 'Review Lesson' : 'Open Lesson'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
-            <span className="text-xs font-mono text-emerald-400 font-bold">5 Modules</span>
-          </div>
-
-          <div className="space-y-4">
-            {column2Modules.map(renderModuleCard)}
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

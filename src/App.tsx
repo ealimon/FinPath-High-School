@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
-import { TopNav, MainTab } from './components/TopNav';
+import { MainTab } from './components/TopNav';
 import { ModulesGridView } from './components/ModulesGridView';
 import { ModuleDetail } from './components/ModuleDetail';
 import { CalculatorsView } from './components/CalculatorsView';
@@ -9,6 +9,7 @@ import { WorksheetsView } from './components/WorksheetsView';
 import { AITutorModal } from './components/AITutorModal';
 import { MODULES_DATA } from './data/modulesData';
 import { UserStats, ModuleData } from './types';
+import { Sparkles, MessageCircle } from 'lucide-react';
 
 export default function App() {
   const [modules, setModules] = useState<ModuleData[]>(MODULES_DATA);
@@ -28,7 +29,7 @@ export default function App() {
 
   const handleSelectTab = (tab: MainTab) => {
     if (tab === 'modules' && activeMainTab === 'modules' && moduleViewMode === 'detail') {
-      // If clicking curriculum modules while in detail, return to 2 columns of 5 overview
+      // If clicking curriculum modules while in detail, return to overview
       setModuleViewMode('grid');
     }
     setActiveMainTab(tab);
@@ -52,10 +53,10 @@ export default function App() {
         osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
         osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
         osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
-        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.4);
+        osc.stop(audioCtx.currentTime + 0.35);
       } catch (e) {
         // Audio fallback
       }
@@ -80,26 +81,20 @@ export default function App() {
   const selectedModule = modules.find((m) => m.id === selectedModuleId) || modules[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased print:bg-white print:text-black print:min-h-0 print:h-auto selection:bg-cyan-500 selection:text-slate-950">
-      {/* HEADER BAR */}
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans antialiased print:bg-white print:text-black print:min-h-0 print:h-auto selection:bg-emerald-100 selection:text-emerald-900">
+      {/* UNIFIED CALM HEADER BAR */}
       <div className="print:hidden">
         <Header
           userStats={userStats}
+          activeTab={activeMainTab}
+          onSelectTab={handleSelectTab}
           onOpenAiTutor={() => setIsAiTutorOpen(true)}
           soundEnabled={soundEnabled}
           onToggleSound={() => setSoundEnabled(!soundEnabled)}
         />
       </div>
 
-      {/* TOP SUB-NAV TABS */}
-      <div className="print:hidden">
-        <TopNav
-          activeTab={activeMainTab}
-          onSelectTab={handleSelectTab}
-        />
-      </div>
-
-      {/* MAIN CONTAINER */}
+      {/* MAIN CONTENT AREA */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:m-0 print:max-w-none">
         {/* CURRICULUM MODULES TAB */}
         {activeMainTab === 'modules' && (
@@ -146,15 +141,31 @@ export default function App() {
         )}
       </main>
 
-      {/* FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 print:hidden">
+      {/* GENTLE, FLOATING AI HELPER (FINLEY) */}
+      <div className="fixed bottom-6 right-6 z-40 print:hidden">
+        <button
+          onClick={() => setIsAiTutorOpen(true)}
+          className="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-4 py-3 rounded-full shadow-lg shadow-emerald-900/10 flex items-center gap-2.5 transition-all hover:scale-105 cursor-pointer border border-emerald-600/30"
+          title="Ask Finley a financial question"
+        >
+          <Sparkles className="w-4 h-4 text-emerald-200" />
+          <span className="text-sm font-semibold">Ask Finley</span>
+          <MessageCircle className="w-4 h-4 text-emerald-200" />
+        </button>
+      </div>
+
+      {/* GENTLE FOOTER */}
+      <footer className="border-t border-slate-200/80 bg-white py-6 text-center text-xs text-slate-500 print:hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div>© 2026 FINPATH HIGH SCHOOL • Personal Finance & Adulting Preparation</div>
-          <div className="flex gap-4 font-bold text-slate-400">
-            <span>🎓 TAXES & PAYROLL</span>
-            <span>💳 CREDIT & BANKING</span>
-            <span>📈 ROTH IRA INVESTING</span>
-            <span>🚗 AUTO & RENTING</span>
+          <div>FinPath • High School Personal Finance & Life Skills Preparation</div>
+          <div className="flex gap-4 font-medium text-slate-500">
+            <span>Taxes & Paychecks</span>
+            <span>•</span>
+            <span>Credit & Banking</span>
+            <span>•</span>
+            <span>Investing</span>
+            <span>•</span>
+            <span>Living On Your Own</span>
           </div>
         </div>
       </footer>

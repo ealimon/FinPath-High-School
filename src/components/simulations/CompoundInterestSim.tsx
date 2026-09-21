@@ -8,7 +8,7 @@ interface Props {
 export const CompoundInterestSim: React.FC<Props> = ({ onCompleteGame }) => {
   const [startAge, setStartAge] = useState(15);
   const [monthlyContribution, setMonthlyContribution] = useState(100);
-  const [annualReturn, setAnnualReturn] = useState(8); // 8% average return
+  const annualReturn = 8; // 8% average return
 
   const endAge = 65;
   const yearsInv = endAge - startAge;
@@ -26,25 +26,25 @@ export const CompoundInterestSim: React.FC<Props> = ({ onCompleteGame }) => {
   const interestEarned = futureValue - totalContributions;
 
   return (
-    <div className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl max-w-3xl mx-auto my-4 space-y-6">
+    <div className="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs max-w-3xl mx-auto my-4 space-y-6">
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
-          <TrendingUp className="w-6 h-6" />
+        <div className="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center border border-emerald-200/80 shrink-0">
+          <TrendingUp className="w-5 h-5 text-emerald-800" />
         </div>
         <div>
-          <h3 className="text-xl font-black">Compound Interest Time Machine</h3>
-          <p className="text-xs text-slate-400">See how starting at age 15 turns small monthly savings into retirement wealth!</p>
+          <h3 className="text-xl font-bold text-slate-800">Compound Growth Simulator</h3>
+          <p className="text-xs text-slate-500">See how time turns modest monthly savings into substantial retirement savings.</p>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80">
         <div>
-          <div className="flex justify-between items-center text-sm font-bold mb-1">
-            <span className="text-cyan-400 flex items-center gap-1">
-              <Clock className="w-4 h-4" /> Starting Age
+          <div className="flex justify-between items-center text-xs font-semibold mb-1.5">
+            <span className="text-slate-700 flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-emerald-700" /> Starting Age
             </span>
-            <span className="text-white">Age {startAge}</span>
+            <span className="text-slate-900 font-mono font-bold">Age {startAge}</span>
           </div>
           <input
             type="range"
@@ -52,15 +52,15 @@ export const CompoundInterestSim: React.FC<Props> = ({ onCompleteGame }) => {
             max="35"
             value={startAge}
             onChange={(e) => setStartAge(Number(e.target.value))}
-            className="w-full accent-cyan-400 cursor-pointer"
+            className="w-full accent-emerald-700 cursor-pointer"
           />
-          <span className="text-xs text-slate-400">Investing until age 65 ({yearsInv} years)</span>
+          <span className="text-[11px] text-slate-500 block mt-1">Investing until age 65 ({yearsInv} years)</span>
         </div>
 
         <div>
-          <div className="flex justify-between items-center text-sm font-bold mb-1">
-            <span className="text-emerald-400">Monthly Contribution</span>
-            <span className="text-white">${monthlyContribution}/mo</span>
+          <div className="flex justify-between items-center text-xs font-semibold mb-1.5">
+            <span className="text-slate-700">Monthly Contribution</span>
+            <span className="text-slate-900 font-mono font-bold">${monthlyContribution} / mo</span>
           </div>
           <input
             type="range"
@@ -69,41 +69,41 @@ export const CompoundInterestSim: React.FC<Props> = ({ onCompleteGame }) => {
             step="25"
             value={monthlyContribution}
             onChange={(e) => setMonthlyContribution(Number(e.target.value))}
-            className="w-full accent-emerald-400 cursor-pointer"
+            className="w-full accent-emerald-700 cursor-pointer"
           />
         </div>
       </div>
 
       {/* Results Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">You Invest Out-Of-Pocket</div>
-          <div className="text-xl font-black text-slate-200 mt-1">${totalContributions.toLocaleString()}</div>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">You Deposit Out-Of-Pocket</div>
+          <div className="text-xl font-bold text-slate-700 mt-1 font-mono">${totalContributions.toLocaleString()}</div>
         </div>
 
-        <div className="bg-emerald-950/80 p-4 rounded-xl border border-emerald-600/50">
-          <div className="text-xs text-emerald-300">Compound Interest Earned</div>
-          <div className="text-2xl font-black text-emerald-400 mt-1">+${interestEarned.toLocaleString()}</div>
+        <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80">
+          <div className="text-xs text-emerald-800 font-medium">Compound Interest Earned</div>
+          <div className="text-xl font-bold text-emerald-800 mt-1 font-mono">+${interestEarned.toLocaleString()}</div>
         </div>
 
-        <div className="bg-gradient-to-br from-cyan-950 to-blue-900 p-4 rounded-xl border border-cyan-500/50">
-          <div className="text-xs text-cyan-200">Total Portfolio Value at Age 65</div>
-          <div className="text-2xl font-black text-cyan-300 mt-1">${futureValue.toLocaleString()}</div>
+        <div className="bg-emerald-100/60 p-4 rounded-2xl border border-emerald-300">
+          <div className="text-xs text-emerald-900 font-semibold">Total Portfolio at Age 65</div>
+          <div className="text-2xl font-bold text-emerald-950 mt-1 font-mono">${futureValue.toLocaleString()}</div>
         </div>
       </div>
 
       {/* Comparison Callout */}
-      <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 text-sm text-slate-300">
-        💡 <strong>Key Takeaway:</strong> Interest makes up <span className="text-emerald-400 font-bold">{Math.round((interestEarned / futureValue) * 100)}%</span> of your total wealth! Starting at age 15 vs age 25 gives you over <strong>2.5x more wealth</strong> because of compound time!
+      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 leading-relaxed">
+        💡 <strong>Key Takeaway:</strong> Compound interest makes up <strong className="text-emerald-800">{Math.round((interestEarned / futureValue) * 100)}%</strong> of your total balance. Starting in high school gives your deposits an extra decade of exponential growth compared to waiting until your late 20s.
       </div>
 
       <div className="flex justify-end">
         <button
           onClick={() => onCompleteGame(50, 50)}
-          className="bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 px-6 py-3 rounded-xl font-black flex items-center gap-2 transition-all shadow-lg cursor-pointer hover:scale-105"
+          className="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all text-xs sm:text-sm cursor-pointer shadow-xs"
         >
-          <Sparkles className="w-5 h-5" />
-          Complete Time Machine Challenge (+50 Coins & +50 XP)
+          <Sparkles className="w-4 h-4" />
+          <span>Complete Practice & Continue</span>
         </button>
       </div>
     </div>

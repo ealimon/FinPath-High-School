@@ -61,3 +61,5 @@ export interface UserStats {
   readinessPercentage: number;
 }
 
+export type MainTab = 'modules' | 'calculators' | 'worksheets' | 'readiness';
+

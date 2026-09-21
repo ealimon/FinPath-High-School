@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, TrendingUp, Car, GraduationCap, Home, DollarSign, ArrowRight } from 'lucide-react';
+import { Calculator, TrendingUp, Car, GraduationCap, Home } from 'lucide-react';
 
 export const CalculatorsView: React.FC = () => {
   const [activeCalc, setActiveCalc] = useState<'roth' | 'auto' | 'college' | 'apartment'>('roth');
@@ -34,7 +34,7 @@ export const CalculatorsView: React.FC = () => {
   );
   const totalAutoPaid = carMonthlyPayment * loanTermMonths;
   const totalAutoInterest = Math.max(0, totalAutoPaid - loanPrincipal);
-  const estimatedInsurance = 175; // Average teen/young adult monthly rate
+  const estimatedInsurance = 175; // Average young adult monthly rate
   const totalMonthlyAuto = carMonthlyPayment + estimatedInsurance;
 
   // 3. Student Loans State
@@ -63,15 +63,15 @@ export const CalculatorsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* HEADER */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2">
-            <Calculator className="w-4 h-4 text-cyan-400" />
-            <span>FINANCIAL DECISION TOOLKIT</span>
+          <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-3 py-1 rounded-full text-xs font-semibold mb-2">
+            <Calculator className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Interactive Calculators</span>
           </div>
-          <h2 className="text-3xl font-black text-white">Interactive Life Calculators</h2>
-          <p className="text-sm text-slate-300 mt-1">
-            Run real-world financial projections for investing, buying a car, college loans, and renting your first apartment!
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Financial Planning Tools</h2>
+          <p className="text-sm text-slate-600 mt-1">
+            Explore how numbers work in real life: investing early, buying a car, managing student debt, and renting an apartment.
           </p>
         </div>
       </div>
@@ -80,67 +80,67 @@ export const CalculatorsView: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
           onClick={() => setActiveCalc('roth')}
-          className={`p-4 rounded-2xl border text-left font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-3 ${
+          className={`p-4 rounded-2xl border text-left font-semibold text-xs transition-all cursor-pointer flex items-center gap-3 ${
             activeCalc === 'roth'
-              ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg scale-102'
-              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+              ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
+              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           }`}
         >
-          <TrendingUp className="w-5 h-5 shrink-0" />
-          <span>Roth IRA Compounder</span>
+          <TrendingUp className="w-4 h-4 shrink-0" />
+          <span>Roth IRA Growth</span>
         </button>
 
         <button
           onClick={() => setActiveCalc('auto')}
-          className={`p-4 rounded-2xl border text-left font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-3 ${
+          className={`p-4 rounded-2xl border text-left font-semibold text-xs transition-all cursor-pointer flex items-center gap-3 ${
             activeCalc === 'auto'
-              ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg scale-102'
-              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+              ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
+              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           }`}
         >
-          <Car className="w-5 h-5 shrink-0" />
+          <Car className="w-4 h-4 shrink-0" />
           <span>Car Financing</span>
         </button>
 
         <button
           onClick={() => setActiveCalc('college')}
-          className={`p-4 rounded-2xl border text-left font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-3 ${
+          className={`p-4 rounded-2xl border text-left font-semibold text-xs transition-all cursor-pointer flex items-center gap-3 ${
             activeCalc === 'college'
-              ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg scale-102'
-              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+              ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
+              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           }`}
         >
-          <GraduationCap className="w-5 h-5 shrink-0" />
-          <span>Student Loan Repayment</span>
+          <GraduationCap className="w-4 h-4 shrink-0" />
+          <span>Student Loans</span>
         </button>
 
         <button
           onClick={() => setActiveCalc('apartment')}
-          className={`p-4 rounded-2xl border text-left font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-3 ${
+          className={`p-4 rounded-2xl border text-left font-semibold text-xs transition-all cursor-pointer flex items-center gap-3 ${
             activeCalc === 'apartment'
-              ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg scale-102'
-              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+              ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
+              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
           }`}
         >
-          <Home className="w-5 h-5 shrink-0" />
-          <span>Apartment Budgeter</span>
+          <Home className="w-4 h-4 shrink-0" />
+          <span>First Apartment</span>
         </button>
       </div>
 
       {/* ROTH IRA CALCULATOR */}
       {activeCalc === 'roth' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-xl font-black text-cyan-300">Roth IRA Compound Wealth Growth Calculator</h3>
-            <p className="text-xs text-slate-400">See how investing early in an S&P 500 index fund turns small monthly deposits into millions tax-free by age 65.</p>
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-xs space-y-6">
+          <div className="border-b border-slate-100 pb-4">
+            <h3 className="text-xl font-bold text-slate-800">Roth IRA Compound Growth Calculator</h3>
+            <p className="text-xs text-slate-500 mt-0.5">See how investing early allows modest monthly deposits to grow significantly by age 65 tax-free.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-5 bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="space-y-5 bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80">
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
                   <span>Starting Age</span>
-                  <span className="text-cyan-400 font-mono font-black">{rothStartAge} years old</span>
+                  <span className="text-emerald-700 font-mono font-bold">{rothStartAge} years old</span>
                 </label>
                 <input
                   type="range"
@@ -148,14 +148,14 @@ export const CalculatorsView: React.FC = () => {
                   max={45}
                   value={rothStartAge}
                   onChange={(e) => setRothStartAge(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
-                  <span>Monthly Investment Contribution</span>
-                  <span className="text-cyan-400 font-mono font-black">${rothMonthly}/month</span>
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
+                  <span>Monthly Contribution</span>
+                  <span className="text-emerald-700 font-mono font-bold">${rothMonthly} / month</span>
                 </label>
                 <input
                   type="range"
@@ -164,14 +164,14 @@ export const CalculatorsView: React.FC = () => {
                   step={25}
                   value={rothMonthly}
                   onChange={(e) => setRothMonthly(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
                   <span>Expected Annual Market Return (S&P 500 average ~8-10%)</span>
-                  <span className="text-cyan-400 font-mono font-black">{rothReturnRate}% APY</span>
+                  <span className="text-emerald-700 font-mono font-bold">{rothReturnRate}% APY</span>
                 </label>
                 <input
                   type="range"
@@ -180,31 +180,31 @@ export const CalculatorsView: React.FC = () => {
                   step={0.5}
                   value={rothReturnRate}
                   onChange={(e) => setRothReturnRate(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-cyan-950/60 to-slate-900 border border-cyan-500/30 p-6 rounded-2xl flex flex-col justify-between space-y-4">
+            <div className="bg-emerald-50/50 border border-emerald-200/80 p-6 rounded-2xl flex flex-col justify-between space-y-4">
               <div>
-                <div className="text-xs font-black uppercase text-cyan-400 tracking-wider">PROJECTED ROTH IRA BALANCE AT AGE 65</div>
-                <div className="text-4xl sm:text-5xl font-black text-white mt-2 font-mono">${rothFinalWealth.toLocaleString()}</div>
-                <div className="text-xs text-emerald-400 font-bold mt-1">100% Tax-Free Growth & Retirement Withdrawals!</div>
+                <div className="text-xs font-semibold uppercase text-emerald-800 tracking-wider">Estimated Balance at Age 65</div>
+                <div className="text-4xl sm:text-5xl font-bold text-slate-800 mt-2 font-mono">${rothFinalWealth.toLocaleString()}</div>
+                <div className="text-xs text-emerald-700 font-medium mt-1">100% Tax-Free Growth and Retirement Withdrawals</div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-emerald-200/60">
                 <div>
-                  <div className="text-[11px] text-slate-400 font-bold">Your Total Deposits</div>
-                  <div className="text-lg font-black text-slate-200 font-mono">${totalContributed.toLocaleString()}</div>
+                  <div className="text-xs text-slate-500 font-medium">Your Total Deposits</div>
+                  <div className="text-lg font-bold text-slate-700 font-mono">${totalContributed.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-emerald-400 font-bold">Compound Interest Growth</div>
-                  <div className="text-lg font-black text-emerald-400 font-mono">+${totalInterestEarned.toLocaleString()}</div>
+                  <div className="text-xs text-emerald-800 font-medium">Compound Growth</div>
+                  <div className="text-lg font-bold text-emerald-700 font-mono">+${totalInterestEarned.toLocaleString()}</div>
                 </div>
               </div>
 
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-300">
-                💡 <strong>Key Takeaway:</strong> Starting at age {rothStartAge} instead of 30 gives your money {rothYears} full years to compound. Over 80% of your final balance comes purely from interest growth!
+              <div className="bg-white p-3.5 rounded-xl border border-emerald-200/60 text-xs text-slate-600">
+                💡 <strong>Takeaway:</strong> Starting at age {rothStartAge} instead of 30 gives your money {rothYears} years to compound. Most of your final balance comes from interest growth, not out-of-pocket deposits!
               </div>
             </div>
           </div>
@@ -213,18 +213,18 @@ export const CalculatorsView: React.FC = () => {
 
       {/* AUTO FINANCING CALCULATOR */}
       {activeCalc === 'auto' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-xl font-black text-cyan-300">First Car Financing & Total Cost Estimator</h3>
-            <p className="text-xs text-slate-400">Calculate total monthly costs including auto loan principal, interest, and young driver insurance premiums.</p>
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-xs space-y-6">
+          <div className="border-b border-slate-100 pb-4">
+            <h3 className="text-xl font-bold text-slate-800">First Car Financing Estimator</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Calculate monthly loan payments plus realistic young driver insurance costs.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-5 bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="space-y-5 bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80">
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
                   <span>Vehicle Purchase Price</span>
-                  <span className="text-cyan-400 font-mono font-black">${carPrice.toLocaleString()}</span>
+                  <span className="text-emerald-700 font-mono font-bold">${carPrice.toLocaleString()}</span>
                 </label>
                 <input
                   type="range"
@@ -233,14 +233,14 @@ export const CalculatorsView: React.FC = () => {
                   step={500}
                   value={carPrice}
                   onChange={(e) => setCarPrice(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
-                  <span>Cash Down Payment</span>
-                  <span className="text-cyan-400 font-mono font-black">${downPayment.toLocaleString()}</span>
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
+                  <span>Down Payment</span>
+                  <span className="text-emerald-700 font-mono font-bold">${downPayment.toLocaleString()}</span>
                 </label>
                 <input
                   type="range"
@@ -249,31 +249,31 @@ export const CalculatorsView: React.FC = () => {
                   step={500}
                   value={downPayment}
                   onChange={(e) => setDownPayment(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">Loan Interest (APR)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Loan Interest (APR)</label>
                   <select
                     value={carApr}
                     onChange={(e) => setCarApr(Number(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white"
+                    className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs text-slate-800"
                   >
                     <option value={4.5}>4.5% (Excellent Credit 750+)</option>
                     <option value={7.5}>7.5% (Good Credit 700+)</option>
-                    <option value={12.0}>12.0% (First-Time Buyer / Fair Credit)</option>
-                    <option value={18.0}>18.0% (Poor Credit / High Risk)</option>
+                    <option value={12.0}>12.0% (First-Time Buyer)</option>
+                    <option value={18.0}>18.0% (High Risk)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">Loan Duration</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Loan Term</label>
                   <select
                     value={loanTermMonths}
                     onChange={(e) => setLoanTermMonths(Number(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white"
+                    className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs text-slate-800"
                   >
                     <option value={36}>36 Months (3 Years)</option>
                     <option value={48}>48 Months (4 Years)</option>
@@ -283,26 +283,26 @@ export const CalculatorsView: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 justify-between flex flex-col">
+            <div className="bg-slate-50/70 border border-slate-200/80 p-6 rounded-2xl space-y-4 justify-between flex flex-col">
               <div>
-                <div className="text-xs font-black uppercase text-cyan-400 tracking-wider">TOTAL ESTIMATED MONTHLY VEHICLE OUTFLOW</div>
-                <div className="text-4xl sm:text-5xl font-black text-white mt-2 font-mono">${totalMonthlyAuto}/mo</div>
-                <div className="text-xs text-slate-400 mt-1">Includes ${carMonthlyPayment}/mo auto loan + ~${estimatedInsurance}/mo estimated insurance</div>
+                <div className="text-xs font-semibold uppercase text-slate-600 tracking-wider">Estimated Total Monthly Cost</div>
+                <div className="text-4xl sm:text-5xl font-bold text-slate-800 mt-2 font-mono">${totalMonthlyAuto} / mo</div>
+                <div className="text-xs text-slate-500 mt-1">Includes ${carMonthlyPayment}/mo loan payment + ~${estimatedInsurance}/mo insurance</div>
               </div>
 
-              <div className="space-y-2 pt-4 border-t border-slate-800 text-xs">
-                <div className="flex justify-between text-slate-300">
-                  <span>Loan Amount Financed:</span>
-                  <span className="font-mono font-bold">${loanPrincipal.toLocaleString()}</span>
+              <div className="space-y-2 pt-4 border-t border-slate-200 text-xs">
+                <div className="flex justify-between text-slate-600">
+                  <span>Loan Principal Financed:</span>
+                  <span className="font-mono font-bold text-slate-800">${loanPrincipal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-rose-400">
-                  <span>Total Loan Interest Paid ({loanTermMonths} mos):</span>
-                  <span className="font-mono font-bold">${totalAutoInterest.toLocaleString()}</span>
+                <div className="flex justify-between text-slate-600">
+                  <span>Total Interest Over {loanTermMonths} Months:</span>
+                  <span className="font-mono font-bold text-amber-700">${totalAutoInterest.toLocaleString()}</span>
                 </div>
               </div>
 
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-300">
-                💡 <strong>High School Auto Tip:</strong> Buying a reliable $10,000-$15,000 used car with a larger down payment saves thousands in loan interest compared to financing a brand new $30,000 vehicle.
+              <div className="bg-white p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600">
+                💡 <strong>Helpful Tip:</strong> Buying a reliable 3–5 year old certified pre-owned car minimizes initial depreciation while keeping insurance and loan payments manageable.
               </div>
             </div>
           </div>
@@ -311,18 +311,18 @@ export const CalculatorsView: React.FC = () => {
 
       {/* STUDENT LOAN CALCULATOR */}
       {activeCalc === 'college' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-xl font-black text-cyan-300">Student Loan Debt Repayment & Salary Ratio</h3>
-            <p className="text-xs text-slate-400">Calculate standard 10-year repayment payments and evaluate post-graduation salary debt ratios.</p>
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-xs space-y-6">
+          <div className="border-b border-slate-100 pb-4">
+            <h3 className="text-xl font-bold text-slate-800">Student Loan Repayment & Salary Ratio</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Evaluate standard 10-year repayment amounts against your expected starting salary.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-5 bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="space-y-5 bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80">
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
                   <span>Total Student Loan Debt</span>
-                  <span className="text-cyan-400 font-mono font-black">${studentDebt.toLocaleString()}</span>
+                  <span className="text-emerald-700 font-mono font-bold">${studentDebt.toLocaleString()}</span>
                 </label>
                 <input
                   type="range"
@@ -331,14 +331,14 @@ export const CalculatorsView: React.FC = () => {
                   step={2500}
                   value={studentDebt}
                   onChange={(e) => setStudentDebt(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
-                  <span>Expected Starting Annual Career Salary</span>
-                  <span className="text-cyan-400 font-mono font-black">${expectedSalary.toLocaleString()}/yr</span>
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
+                  <span>Expected Starting Annual Salary</span>
+                  <span className="text-emerald-700 font-mono font-bold">${expectedSalary.toLocaleString()} / yr</span>
                 </label>
                 <input
                   type="range"
@@ -347,22 +347,22 @@ export const CalculatorsView: React.FC = () => {
                   step={2500}
                   value={expectedSalary}
                   onChange={(e) => setExpectedSalary(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
             </div>
 
-            <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+            <div className="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 space-y-4 flex flex-col justify-between">
               <div>
-                <div className="text-xs font-black uppercase text-cyan-400 tracking-wider">MONTHLY STUDENT LOAN REPAYMENT (10-YEAR STANDARD)</div>
-                <div className="text-4xl font-black text-white mt-2 font-mono">${studentMonthlyPayment}/mo</div>
-                <div className="text-xs text-slate-400 mt-1">Consumes ~{debtToIncomeRatio}% of gross monthly salary (${grossMonthlySalary}/mo)</div>
+                <div className="text-xs font-semibold uppercase text-slate-600 tracking-wider">Estimated Monthly Payment (10-Year Plan)</div>
+                <div className="text-4xl font-bold text-slate-800 mt-2 font-mono">${studentMonthlyPayment} / mo</div>
+                <div className="text-xs text-slate-500 mt-1">Takes up ~{debtToIncomeRatio}% of gross monthly income (${grossMonthlySalary}/mo)</div>
               </div>
 
-              <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <div className="font-bold text-white">Rule of Thumb for Student Loans:</div>
-                <p className="text-slate-300">
-                  Try to keep your total student loan debt BELOW your expected first-year career salary. Keeping loan payments under 10% of gross salary ensures you can afford rent, groceries, and savings.
+              <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                <div className="font-bold text-slate-800">Golden Rule of College Loans:</div>
+                <p className="text-slate-600 leading-relaxed">
+                  Try to keep your total student debt below your expected first-year salary. Keeping loan payments under 10% of monthly income leaves plenty of room for rent, groceries, and personal savings.
                 </p>
               </div>
             </div>
@@ -372,18 +372,18 @@ export const CalculatorsView: React.FC = () => {
 
       {/* APARTMENT BUDGET CALCULATOR */}
       {activeCalc === 'apartment' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-xl font-black text-cyan-300">First Apartment & Living Expense Estimator</h3>
-            <p className="text-xs text-slate-400">Calculate upfront cash needed for move-in (security deposits + rent) and roommate expense splits.</p>
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-xs space-y-6">
+          <div className="border-b border-slate-100 pb-4">
+            <h3 className="text-xl font-bold text-slate-800">First Apartment & Moving Expense Estimator</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Calculate upfront move-in cash (first, last, and security deposit) plus monthly expense splits.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-5 bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="space-y-5 bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80">
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
-                  <span>Total Monthly Rent for Apartment</span>
-                  <span className="text-cyan-400 font-mono font-black">${monthlyRent.toLocaleString()}/mo</span>
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
+                  <span>Monthly Apartment Rent</span>
+                  <span className="text-emerald-700 font-mono font-bold">${monthlyRent.toLocaleString()} / mo</span>
                 </label>
                 <input
                   type="range"
@@ -392,14 +392,14 @@ export const CalculatorsView: React.FC = () => {
                   step={50}
                   value={monthlyRent}
                   onChange={(e) => setMonthlyRent(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 justify-between flex mb-2">
-                  <span>Number of Roommates Sharing Costs</span>
-                  <span className="text-cyan-400 font-mono font-black">{numRoommates} people total</span>
+                <label className="text-xs font-semibold text-slate-700 justify-between flex mb-2">
+                  <span>Number of People Splitting Costs</span>
+                  <span className="text-emerald-700 font-mono font-bold">{numRoommates} people</span>
                 </label>
                 <input
                   type="range"
@@ -407,22 +407,22 @@ export const CalculatorsView: React.FC = () => {
                   max={4}
                   value={numRoommates}
                   onChange={(e) => setNumRoommates(Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-emerald-700 cursor-pointer"
                 />
               </div>
             </div>
 
-            <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+            <div className="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 space-y-4 flex flex-col justify-between">
               <div>
-                <div className="text-xs font-black uppercase text-cyan-400 tracking-wider">YOUR INDIVIDUAL MONTHLY HOUSING SHARE</div>
-                <div className="text-4xl font-black text-white mt-2 font-mono">${perPersonMonthlyHousing}/mo</div>
-                <div className="text-xs text-slate-400 mt-1">Includes rent share (${Math.round(monthlyRent / numRoommates)}) + utilities share (${Math.round(utilities / numRoommates)})</div>
+                <div className="text-xs font-semibold uppercase text-slate-600 tracking-wider">Your Monthly Share</div>
+                <div className="text-4xl font-bold text-slate-800 mt-2 font-mono">${perPersonMonthlyHousing} / mo</div>
+                <div className="text-xs text-slate-500 mt-1">Includes rent share (${Math.round(monthlyRent / numRoommates)}) + utilities share (${Math.round(utilities / numRoommates)})</div>
               </div>
 
-              <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <div className="font-bold text-amber-300">Upfront Cash Needed Before Moving In:</div>
-                <div className="text-2xl font-black text-white font-mono">${upfrontMoveInCash.toLocaleString()}</div>
-                <div className="text-slate-400 text-[11px]">(First Month Rent + Last Month Rent + Security Deposit)</div>
+              <div className="bg-amber-50/80 p-4 rounded-xl border border-amber-200/80 space-y-1 text-xs">
+                <div className="font-bold text-amber-900">Upfront Cash Needed Before Moving In:</div>
+                <div className="text-2xl font-bold text-amber-950 font-mono">${upfrontMoveInCash.toLocaleString()}</div>
+                <div className="text-amber-800 text-[11px]">(First Month + Last Month + Security Deposit)</div>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ModuleData } from '../types';
-import { FileText, Download, CheckCircle2, Sparkles, Printer } from 'lucide-react';
+import { FileText, Sparkles, Printer } from 'lucide-react';
 
 interface Props {
   modules: ModuleData[];
@@ -26,8 +26,10 @@ export const WorksheetsView: React.FC<Props> = ({ modules, selectedModuleId }) =
   return (
     <div className="space-y-6">
       {/* MODULE SELECTOR RIBBON */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-xl flex items-center gap-2 overflow-x-auto print:hidden">
-        <span className="text-xs font-black text-slate-400 uppercase tracking-wider px-2 shrink-0">SELECT WORKSHEET:</span>
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-4 shadow-xs flex items-center gap-2 overflow-x-auto print:hidden">
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2 shrink-0">
+          Lesson Worksheets:
+        </span>
         {modules.map((m) => (
           <button
             key={m.id}
@@ -35,68 +37,68 @@ export const WorksheetsView: React.FC<Props> = ({ modules, selectedModuleId }) =
               setActiveModuleId(m.id);
               setShowAnswers(false);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer whitespace-nowrap ${
               activeModuleId === m.id
-                ? 'bg-cyan-500 text-slate-950 shadow-md scale-105'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            Mod {m.id}: {m.title}
+            Lesson {m.id}: {m.title}
           </button>
         ))}
       </div>
 
       {/* WORKSHEET PRINTABLE CONTAINER */}
-      <div className="bg-white text-slate-900 rounded-3xl p-8 sm:p-10 shadow-2xl border-4 border-slate-200 space-y-5 print:shadow-none print:border-none print:p-0 print:m-0 print:space-y-3.5 print:text-black print:rounded-none print:bg-white">
+      <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-200 space-y-6 print:shadow-none print:border-none print:p-0 print:m-0 print:space-y-4 print:text-black print:rounded-none">
         {/* Printable Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b-2 border-slate-200 print:pb-2 print:border-slate-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-200 print:pb-2 print:border-slate-800">
           <div>
-            <div className="flex items-center gap-2 text-cyan-700 font-bold text-xs uppercase tracking-widest mb-0.5 print:text-slate-700">
-              <FileText className="w-3.5 h-3.5" />
-              <span>FINPATH HIGH • HIGH SCHOOL FINANCIAL CASE STUDY WORKSHEET</span>
+            <div className="flex items-center gap-2 text-emerald-800 font-semibold text-xs uppercase tracking-wider mb-1 print:text-slate-700">
+              <FileText className="w-3.5 h-3.5 text-emerald-700" />
+              <span>FinPath High School • Personal Finance Case Study</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 print:text-xl">{worksheet.title}</h2>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5 print:text-slate-600">{worksheet.subtitle}</p>
+            <h2 className="text-2xl font-bold text-slate-900 print:text-xl">{worksheet.title}</h2>
+            <p className="text-xs text-slate-500 font-medium mt-0.5 print:text-slate-600">{worksheet.subtitle}</p>
           </div>
 
           <div className="flex gap-2 print:hidden shrink-0">
             <button
               onClick={() => setShowAnswers(!showAnswers)}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer border border-slate-300 flex items-center gap-1.5"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer border border-slate-200 flex items-center gap-1.5"
             >
-              <Sparkles className="w-4 h-4 text-cyan-600" />
-              {showAnswers ? 'Hide Answer Key' : 'Show Answer Key'}
+              <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+              <span>{showAnswers ? 'Hide Answer Key' : 'Show Answer Key'}</span>
             </button>
 
             <button
               onClick={handlePrint}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2 rounded-xl text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
             >
-              <Printer className="w-4 h-4" />
-              Print / Save PDF
+              <Printer className="w-3.5 h-3.5" />
+              <span>Print / Save PDF</span>
             </button>
           </div>
         </div>
 
         {/* Student Name & Date Header Block */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs font-mono print:bg-white print:border-slate-400 print:p-2 print:gap-2">
-          <div><strong className="text-slate-700">STUDENT NAME:</strong> ____________________</div>
-          <div><strong className="text-slate-700">CLASS / PERIOD:</strong> ____________________</div>
-          <div><strong className="text-slate-700">DATE:</strong> {new Date().toLocaleDateString()}</div>
+          <div><strong className="text-slate-700">Student Name:</strong> ____________________</div>
+          <div><strong className="text-slate-700">Class / Period:</strong> ____________________</div>
+          <div><strong className="text-slate-700">Date:</strong> {new Date().toLocaleDateString()}</div>
         </div>
 
         {/* Scenario Card */}
-        <div className="bg-amber-50 border-2 border-amber-200 p-3.5 rounded-xl text-xs text-amber-950 space-y-1 print:bg-slate-50 print:border-slate-400 print:p-2.5 print-avoid-break">
-          <strong className="text-amber-900 font-black uppercase tracking-wider block print:text-slate-900">📌 REAL-WORLD CASE SCENARIO:</strong>
+        <div className="bg-amber-50/70 border border-amber-200/80 p-4 rounded-xl text-xs text-amber-950 space-y-1 print:bg-slate-50 print:border-slate-400 print:p-3 print-avoid-break">
+          <strong className="text-amber-900 font-bold uppercase tracking-wider block print:text-slate-900">📌 Case Study Scenario:</strong>
           <p className="text-slate-800 text-xs sm:text-sm leading-relaxed print:text-black">{worksheet.scenario}</p>
         </div>
 
         {/* Questions */}
-        <div className="space-y-4 pt-1 print:space-y-3">
+        <div className="space-y-5 pt-1 print:space-y-4">
           {worksheet.questions.map((q, idx) => (
-            <div key={q.id} className="space-y-1.5 border-b pb-4 border-slate-100 print:border-slate-200 print:pb-2.5 print-avoid-break">
-              <label className="font-bold text-sm text-slate-900 flex items-start gap-2 print:text-xs">
-                <span className="bg-cyan-100 text-cyan-950 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center shrink-0 print:bg-slate-200 print:text-black">
+            <div key={q.id} className="space-y-2 border-b pb-5 border-slate-100 print:border-slate-200 print:pb-3 print-avoid-break">
+              <label className="font-semibold text-sm text-slate-900 flex items-start gap-2.5 print:text-xs">
+                <span className="bg-emerald-100 text-emerald-900 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 print:bg-slate-200 print:text-black">
                   {idx + 1}
                 </span>
                 <span>{q.prompt}</span>
@@ -107,9 +109,9 @@ export const WorksheetsView: React.FC<Props> = ({ modules, selectedModuleId }) =
                 <textarea
                   value={answers[q.id] || ''}
                   onChange={(e) => handleInputChange(q.id, e.target.value)}
-                  placeholder={q.placeholder || 'Type your answer or calculations here...'}
+                  placeholder={q.placeholder || 'Type your notes, calculations, or answer here...'}
                   rows={2}
-                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl p-2.5 text-sm focus:outline-none focus:bg-white text-slate-900 font-sans"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 focus:bg-white rounded-xl p-3 text-sm focus:outline-none text-slate-800 font-sans transition-colors"
                 />
               </div>
 
@@ -120,26 +122,19 @@ export const WorksheetsView: React.FC<Props> = ({ modules, selectedModuleId }) =
                     {answers[q.id]}
                   </div>
                 ) : (
-                  <div className="pt-2 pb-1 space-y-2">
-                    <div className="border-b border-dashed border-slate-400 h-5"></div>
-                    <div className="border-b border-dashed border-slate-400 h-5"></div>
-                  </div>
+                  <div className="h-14 border-b border-dashed border-slate-400" />
                 )}
               </div>
 
-              {showAnswers && q.suggestedAnswer && (
-                <div className="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl text-xs text-emerald-900 font-medium print:bg-slate-100 print:border-slate-400 print:text-black">
-                  <strong>✅ Answer Key:</strong> {q.suggestedAnswer}
+              {/* Answer Key Box */}
+              {showAnswers && (
+                <div className="bg-emerald-50/70 border border-emerald-200/80 p-3 rounded-xl text-xs text-emerald-950 space-y-1">
+                  <div className="font-bold text-emerald-900">Suggested Solution & Rubric:</div>
+                  <div className="leading-relaxed">{q.sampleAnswer}</div>
                 </div>
               )}
             </div>
           ))}
-        </div>
-
-        {/* Printable Footer note */}
-        <div className="hidden print:flex justify-between items-center text-[9px] text-slate-500 pt-1 border-t border-slate-300">
-          <span>FinPath High School Financial Literacy Curriculum</span>
-          <span>Module {activeModule.id} Case Study • Page 1 of 1</span>
         </div>
       </div>
     </div>

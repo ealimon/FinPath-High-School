@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ModuleData } from '../types';
-import { X, Send, Sparkles, MessageCircle, Bot } from 'lucide-react';
+import { X, Send, Sparkles, Bot } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -21,9 +21,9 @@ export const AITutorModal: React.FC<Props> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      text: `Hello! I'm Finley, your High School Financial Advisor. 🎓\n\nAsk me anything about ${
+      text: `Hello! I'm Finley, your personal finance helper. 🎓\n\nAsk me anything about ${
         currentModule ? currentModule.title : 'taxes, credit cards, student loans, budgeting, or investing in a Roth IRA'
-      }! What topic would you like to explore today?`,
+      }! What would you like help understanding today?`,
     },
   ]);
 
@@ -34,8 +34,8 @@ export const AITutorModal: React.FC<Props> = ({
 
   const quickPrompts = [
     'How do I read my W-2 tax form?',
-    'What is a good FICO credit score?',
-    'How does a Roth IRA work at age 18?',
+    'What is a good credit score?',
+    'How does a Roth IRA work at 18?',
     'Subsidized vs Unsubsidized student loans?'
   ];
 
@@ -62,7 +62,7 @@ export const AITutorModal: React.FC<Props> = ({
     if (q.includes('rent') || q.includes('apartment') || q.includes('lease') || q.includes('deposit')) {
       return "🏠 **Apartment Renting Realities:**\n\n• **Move-in Cash:** Landlords often require first month + last month + security deposit upfront (e.g., $3,600+ on a $1,200/mo unit).\n• **Rule of Rent:** Never spend more than 30% of your gross monthly pay on rent.\n• **Roommates:** Sign co-leases with care and establish clear split agreements for utility/Wi-Fi bills.";
     }
-    return `🎓 **High School Financial Tip on "${query}":**\n\nEvery strong financial foundation starts with three pillars: (1) Tracking net income vs expenses, (2) Automating deposits into a High-Yield Savings Account for emergencies, and (3) Paying credit balances on time to build a 720+ FICO score. Let me know if you want a deeper walkthrough of taxes, budgeting, Roth IRAs, or loans!`;
+    return `🎓 **Financial Tip on "${query}":**\n\nEvery strong financial foundation starts with three pillars: (1) Tracking net income vs expenses, (2) Automating deposits into a High-Yield Savings Account for emergencies, and (3) Paying credit balances on time to build a 720+ FICO score. Let me know if you want a deeper walkthrough of taxes, budgeting, Roth IRAs, or loans!`;
   };
 
   const handleSend = async (textToSend?: string) => {
@@ -97,7 +97,7 @@ export const AITutorModal: React.FC<Props> = ({
         setMessages((prev) => [...prev, { role: 'assistant', text: getFallbackResponse(messageText) }]);
       }
     } catch (err) {
-      // Graceful fallback for static GitHub Pages hosting
+      // Graceful fallback for static environments
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', text: getFallbackResponse(messageText) },
@@ -108,51 +108,52 @@ export const AITutorModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border-2 border-cyan-500/40 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh] text-white">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[85vh] text-slate-800">
         {/* MODAL HEADER */}
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-950 p-4 px-6 border-b border-slate-800 flex justify-between items-center">
+        <div className="p-4 px-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/70">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-cyan-500 to-blue-600 text-slate-950 rounded-2xl shadow-lg border border-cyan-300">
-              <Bot className="w-6 h-6" />
+            <div className="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center border border-emerald-200/80">
+              <Bot className="w-5 h-5 text-emerald-800" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-lg text-white">Finley AI Financial Advisor</span>
-                <span className="bg-cyan-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
-                  ONLINE
+                <span className="font-bold text-base text-slate-800">Finley • Financial Advisor</span>
+                <span className="bg-emerald-50 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200/60">
+                  Ready to help
                 </span>
               </div>
-              <p className="text-xs text-slate-400">High School & College Financial Literacy Coach</p>
+              <p className="text-xs text-slate-500">Ask any question in simple, stress-free language</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl transition-all cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+            aria-label="Close Advisor"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* CHAT MESSAGES BODY */}
-        <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 bg-slate-950/60">
+        <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 bg-[#F8FAFC]">
           {messages.map((m, idx) => (
             <div
               key={idx}
               className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {m.role === 'assistant' && (
-                <div className="p-2 bg-slate-800 text-cyan-400 rounded-xl border border-slate-700 shrink-0 self-start">
+                <div className="w-7 h-7 bg-emerald-100 text-emerald-800 rounded-lg flex items-center justify-center shrink-0 self-start mt-0.5">
                   <Bot className="w-4 h-4" />
                 </div>
               )}
 
               <div
-                className={`p-4 rounded-2xl max-w-[80%] text-sm leading-relaxed whitespace-pre-line shadow-md ${
+                className={`p-4 rounded-2xl max-w-[82%] text-sm leading-relaxed whitespace-pre-line shadow-xs ${
                   m.role === 'user'
-                    ? 'bg-cyan-500 text-slate-950 font-medium rounded-tr-none'
-                    : 'bg-slate-800/90 text-slate-200 border border-slate-700/80 rounded-tl-none'
+                    ? 'bg-emerald-700 text-white font-normal rounded-tr-none'
+                    : 'bg-white text-slate-800 border border-slate-200/80 rounded-tl-none'
                 }`}
               >
                 {m.text}
@@ -162,24 +163,24 @@ export const AITutorModal: React.FC<Props> = ({
 
           {loading && (
             <div className="flex gap-3 justify-start items-center">
-              <div className="p-2 bg-slate-800 text-cyan-400 rounded-xl border border-slate-700">
+              <div className="w-7 h-7 bg-emerald-100 text-emerald-800 rounded-lg flex items-center justify-center">
                 <Bot className="w-4 h-4" />
               </div>
-              <div className="bg-slate-800/90 p-4 rounded-2xl rounded-tl-none text-xs text-cyan-300 font-bold animate-pulse flex items-center gap-2">
-                <Sparkles className="w-4 h-4" />
-                <span>Finley is preparing your financial explanation...</span>
+              <div className="bg-white p-3.5 rounded-2xl rounded-tl-none text-xs text-slate-600 border border-slate-200/80 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600 animate-spin" />
+                <span>Finley is preparing an explanation...</span>
               </div>
             </div>
           )}
         </div>
 
         {/* QUICK PROMPTS CHIPS */}
-        <div className="p-3 bg-slate-900 border-t border-slate-800 flex gap-2 overflow-x-auto">
+        <div className="p-3 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto">
           {quickPrompts.map((qp, i) => (
             <button
               key={i}
               onClick={() => handleSend(qp)}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-cyan-950 hover:border-cyan-500 border border-slate-700 text-slate-300 hover:text-cyan-300 text-xs rounded-xl font-bold whitespace-nowrap transition-all cursor-pointer"
+              className="px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-slate-700 hover:text-emerald-900 text-xs rounded-xl font-medium whitespace-nowrap transition-colors cursor-pointer"
             >
               💬 {qp}
             </button>
@@ -187,26 +188,26 @@ export const AITutorModal: React.FC<Props> = ({
         </div>
 
         {/* INPUT FORM */}
-        <div className="p-4 bg-slate-900 border-t border-slate-800 flex gap-2">
+        <div className="p-4 bg-white border-t border-slate-100 flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask Finley a financial question..."
-            className="flex-1 bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-2xl px-4 py-3 text-sm focus:outline-none text-white placeholder-slate-500"
+            placeholder="Ask a question about money, taxes, or budgeting..."
+            className="flex-1 bg-slate-50 border border-slate-200 focus:border-emerald-600 focus:bg-white rounded-xl px-4 py-2.5 text-sm focus:outline-none text-slate-800 placeholder-slate-400 transition-colors"
           />
 
           <button
             onClick={() => handleSend()}
             disabled={!input.trim() || loading}
-            className={`px-5 rounded-2xl font-black flex items-center justify-center transition-all ${
+            className={`px-4 rounded-xl font-medium flex items-center justify-center transition-all ${
               input.trim() && !loading
-                ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg cursor-pointer hover:scale-105'
-                : 'bg-slate-800 text-slate-600 cursor-not-allowed'
+                ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs cursor-pointer'
+                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
             }`}
           >
-            <Send className="w-5 h-5 fill-current" />
+            <Send className="w-4 h-4" />
           </button>
         </div>
       </div>

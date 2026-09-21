@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
+import { BarChart3, Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
 
 interface Props {
   onCompleteGame: (earnedCoins: number, earnedXp: number) => void;
@@ -15,22 +15,24 @@ interface Stock {
 
 export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
   const [cash, setCash] = useState(1000);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [stocks, setStocks] = useState<Stock[]>([
-    { symbol: 'VOO', name: 'S&P 500 Index Fund', price: 100, changePct: +1.2, sharesOwned: 0 },
-    { symbol: 'TECH', name: 'MegaTech Corp', price: 150, changePct: +2.5, sharesOwned: 0 },
-    { symbol: 'ECO', name: 'Clean Energy ETF', price: 50, changePct: -0.8, sharesOwned: 0 }
+    { symbol: 'VOO', name: 'S&P 500 Index Fund ETF', price: 100, changePct: +1.2, sharesOwned: 0 },
+    { symbol: 'TECH', name: 'Diversified Tech Index', price: 150, changePct: +2.5, sharesOwned: 0 },
+    { symbol: 'CLEAN', name: 'Clean Energy & Infrastructure ETF', price: 50, changePct: -0.8, sharesOwned: 0 }
   ]);
 
-  const [news, setNews] = useState('Market open: Tech sector surges following strong earnings report!');
+  const [news, setNews] = useState('Market open: Economic reports indicate steady employment and controlled inflation.');
 
   const portfolioStockValue = stocks.reduce((acc, s) => acc + s.price * s.sharesOwned, 0);
   const totalNetWorth = cash + portfolioStockValue;
 
   const handleBuy = (symbol: string) => {
+    setErrorMessage(null);
     const stock = stocks.find(s => s.symbol === symbol);
     if (!stock) return;
     if (cash < stock.price) {
-      alert('Insufficient cash to buy 1 share!');
+      setErrorMessage(`Insufficient cash to purchase 1 share of ${stock.symbol} ($${stock.price}).`);
       return;
     }
     setCash(prev => prev - stock.price);
@@ -38,6 +40,7 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
   };
 
   const handleSell = (symbol: string) => {
+    setErrorMessage(null);
     const stock = stocks.find(s => s.symbol === symbol);
     if (!stock || stock.sharesOwned <= 0) return;
     setCash(prev => prev + stock.price);
@@ -45,6 +48,7 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
   };
 
   const handleSimulateNextDay = () => {
+    setErrorMessage(null);
     setStocks(prev => prev.map(s => {
       const randomChange = (Math.random() * 6 - 2.5); // -2.5% to +3.5%
       const newPrice = Math.max(10, Math.round(s.price * (1 + randomChange / 100)));
@@ -56,9 +60,9 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
     }));
 
     const headlines = [
-      'Federal Reserve holds interest rates steady; markets gain confidence!',
-      'Green energy demand jumps 15% across global power grids.',
-      'S&P 500 Index reaches new all-time high driven by index fund inflows.'
+      'Federal Reserve policy update supports steady economic growth.',
+      'Renewable energy demand rises across nationwide power grids.',
+      'Broad market index funds hit new milestones with long-term contributions.'
     ];
     setNews(headlines[Math.floor(Math.random() * headlines.length)]);
   };
@@ -66,57 +70,65 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
   const isDiversified = stocks.filter(s => s.sharesOwned > 0).length >= 2;
 
   return (
-    <div className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl max-w-3xl mx-auto my-4 space-y-6">
+    <div className="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs max-w-3xl mx-auto my-4 space-y-6">
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
-          <BarChart3 className="w-6 h-6" />
+        <div className="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center border border-emerald-200/80 shrink-0">
+          <BarChart3 className="w-5 h-5 text-emerald-800" />
         </div>
         <div>
-          <h3 className="text-xl font-black">Rocket Market: Stock & ETF Simulator</h3>
-          <p className="text-xs text-slate-400">Build a $1,000 diversified portfolio across Index Funds, Tech, and Green Energy!</p>
+          <h3 className="text-xl font-bold text-slate-800">Index Fund & Investment Practice</h3>
+          <p className="text-xs text-slate-500">Practice allocating your $1,000 starting cash across diversified index funds.</p>
         </div>
       </div>
 
       {/* Portfolio Header */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-        <div className="bg-slate-800 p-3 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">Cash Available</div>
-          <div className="text-xl font-black text-emerald-400 mt-1">${cash.toFixed(2)}</div>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">Cash Balance</div>
+          <div className="text-xl font-bold text-slate-800 mt-1 font-mono">${cash.toFixed(2)}</div>
         </div>
 
-        <div className="bg-slate-800 p-3 rounded-xl border border-slate-700">
-          <div className="text-xs text-slate-400">Stock Holdings</div>
-          <div className="text-xl font-black text-cyan-400 mt-1">${portfolioStockValue.toFixed(2)}</div>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="text-xs text-slate-500 font-medium">Investments Value</div>
+          <div className="text-xl font-bold text-emerald-800 mt-1 font-mono">${portfolioStockValue.toFixed(2)}</div>
         </div>
 
-        <div className="bg-gradient-to-br from-emerald-950 to-slate-800 p-3 rounded-xl border border-emerald-600/50">
-          <div className="text-xs text-emerald-300">Total Net Worth</div>
-          <div className="text-2xl font-black text-white mt-1">${totalNetWorth.toFixed(2)}</div>
+        <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80">
+          <div className="text-xs text-emerald-800 font-medium">Total Net Worth</div>
+          <div className="text-2xl font-bold text-emerald-950 mt-1 font-mono">${totalNetWorth.toFixed(2)}</div>
         </div>
       </div>
 
-      {/* Ticker / News Ticker */}
-      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300 flex items-center gap-2">
-        <span className="bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-bold uppercase shrink-0">NEWS</span>
+      {/* Error alert if any */}
+      {errorMessage && (
+        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {/* News Ticker */}
+      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
+        <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-semibold text-[11px] uppercase shrink-0">MARKET UPDATE</span>
         <span className="truncate">{news}</span>
       </div>
 
       {/* Stocks Table */}
       <div className="space-y-3">
         {stocks.map(stock => (
-          <div key={stock.symbol} className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div key={stock.symbol} className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-sm bg-slate-700 px-2 py-0.5 rounded text-cyan-300">{stock.symbol}</span>
-                <span className="font-bold text-sm text-white">{stock.name}</span>
+                <span className="font-semibold text-xs bg-white border border-slate-200 px-2 py-0.5 rounded-md text-slate-700 font-mono">{stock.symbol}</span>
+                <span className="font-semibold text-sm text-slate-800">{stock.name}</span>
               </div>
-              <div className="text-xs text-slate-400 mt-1">Owned: <strong className="text-white">{stock.sharesOwned} shares</strong></div>
+              <div className="text-xs text-slate-500 mt-1">Shares Owned: <strong className="text-slate-800">{stock.sharesOwned}</strong></div>
             </div>
 
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="text-right">
-                <div className="font-black text-base text-white">${stock.price}</div>
-                <div className={`text-xs font-bold ${stock.changePct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <div className="font-bold text-base text-slate-900 font-mono">${stock.price}</div>
+                <div className={`text-xs font-semibold ${stock.changePct >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
                   {stock.changePct >= 0 ? '+' : ''}{stock.changePct}%
                 </div>
               </div>
@@ -124,17 +136,17 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleBuy(stock.symbol)}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer transition-all"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-3 py-1.5 rounded-lg text-xs cursor-pointer transition-colors shadow-xs"
                 >
                   Buy +1
                 </button>
                 <button
                   onClick={() => handleSell(stock.symbol)}
                   disabled={stock.sharesOwned <= 0}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     stock.sharesOwned > 0
-                      ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer'
-                      : 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                      ? 'bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer'
+                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   }`}
                 >
                   Sell -1
@@ -146,26 +158,26 @@ export const StockMarketSim: React.FC<Props> = ({ onCompleteGame }) => {
       </div>
 
       {/* Simulate Market Day */}
-      <div className="flex justify-between items-center pt-2">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
         <button
           onClick={handleSimulateNextDay}
-          className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
+          className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
         >
-          <RefreshCw className="w-4 h-4" />
-          Simulate Next Market Day
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>Advance Market Day</span>
         </button>
 
         <button
           onClick={() => onCompleteGame(50, 50)}
           disabled={!isDiversified}
-          className={`px-6 py-3 rounded-xl font-black flex items-center gap-2 transition-all ${
+          className={`px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all text-xs sm:text-sm ${
             isDiversified
-              ? 'bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 shadow-lg cursor-pointer hover:scale-105'
-              : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+              ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs cursor-pointer'
+              : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
           }`}
         >
-          <Sparkles className="w-5 h-5" />
-          {isDiversified ? 'Complete Market Challenge (+50 Coins & +50 XP)' : 'Buy Shares in at least 2 Assets'}
+          <Sparkles className="w-4 h-4" />
+          <span>{isDiversified ? 'Complete Practice & Continue' : 'Diversify by Buying 2 Different Funds'}</span>
         </button>
       </div>
     </div>

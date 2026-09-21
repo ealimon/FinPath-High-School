@@ -1,9 +1,12 @@
 import React from 'react';
-import { GraduationCap, MessageCircle, Volume2, VolumeX, Sparkles, CheckCircle2, Award } from 'lucide-react';
+import { GraduationCap, Volume2, VolumeX, CheckCircle2, BookOpen, Calculator, FileText, ShieldCheck, Sparkles } from 'lucide-react';
 import { UserStats } from '../types';
+import { MainTab } from './TopNav';
 
 interface Props {
   userStats: UserStats;
+  activeTab: MainTab;
+  onSelectTab: (tab: MainTab) => void;
   onOpenAiTutor: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
@@ -11,75 +14,118 @@ interface Props {
 
 export const Header: React.FC<Props> = ({
   userStats,
+  activeTab,
+  onSelectTab,
   onOpenAiTutor,
   soundEnabled,
   onToggleSound,
 }) => {
   return (
-    <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl text-white">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+    <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
         
-        {/* LOGO AREA */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="bg-gradient-to-tr from-cyan-500 to-blue-600 text-slate-950 font-black px-3.5 py-2 rounded-2xl shadow-lg text-lg tracking-wider flex items-center gap-2 border border-cyan-300">
-              <GraduationCap className="w-6 h-6 text-slate-950" />
-              <span>FINPATH</span>
+        {/* LOGO & BRANDING */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+          <button
+            onClick={() => onSelectTab('modules')}
+            className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-100/90 text-emerald-800 flex items-center justify-center border border-emerald-200/80 transition-transform group-hover:scale-105">
+              <GraduationCap className="w-5 h-5 text-emerald-800" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-black text-xl tracking-tight text-white leading-none">HIGH SCHOOL</span>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-800/50 mt-1">
-                PERSONAL FINANCE & ADULTING PREP
-              </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-lg text-slate-800 tracking-tight">FinPath</span>
+                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                  High School
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 font-normal">Personal Finance & Life Prep</p>
             </div>
+          </button>
+
+          {/* Mobile Right Controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={onToggleSound}
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              title={soundEnabled ? 'Mute Sound' : 'Enable Sound'}
+              aria-label="Toggle Sound"
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            </button>
           </div>
         </div>
 
-        {/* METRICS & CONTROLS BAR */}
-        <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
-          
-          {/* READINESS COMPLETED MODULES */}
-          <div className="bg-slate-950/90 border border-slate-800 px-3.5 py-1.5 rounded-2xl flex items-center gap-2.5 shadow-inner">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase">Modules Completed</div>
-              <div className="font-black text-xs text-white font-mono">
-                {userStats.completedModulesCount} of {userStats.totalModulesCount}
-              </div>
-            </div>
-          </div>
-
-          {/* ADULTING READINESS PERCENTAGE */}
-          <div className="bg-slate-950/90 border border-slate-800 px-3.5 py-1.5 rounded-2xl flex items-center gap-2 shadow-inner">
-            <div className="p-1 bg-cyan-500/20 text-cyan-400 rounded-lg">
-              <Award className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase">Readiness Score</div>
-              <div className="font-black text-xs text-cyan-300 font-mono">{userStats.readinessPercentage}%</div>
-            </div>
-          </div>
-
-          {/* SOUND TOGGLE */}
+        {/* CALM, FRIENDLY NAVIGATION TABS */}
+        <nav className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-full py-1">
           <button
-            onClick={onToggleSound}
-            className="p-2 bg-slate-950 border border-slate-800 hover:border-slate-600 rounded-2xl text-slate-300 hover:text-white transition-all cursor-pointer"
-            title={soundEnabled ? 'Mute SFX' : 'Enable SFX'}
+            onClick={() => onSelectTab('modules')}
+            className={`px-3.5 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'modules'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+            <BookOpen className="w-4 h-4" />
+            <span>Lessons</span>
           </button>
 
-          {/* AI ADVISOR (FINLEY) */}
           <button
-            onClick={onOpenAiTutor}
-            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2 transition-all hover:scale-105 cursor-pointer border border-cyan-300"
+            onClick={() => onSelectTab('calculators')}
+            className={`px-3.5 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'calculators'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
           >
-            <Sparkles className="w-4 h-4 fill-slate-950" />
-            <div className="text-left">
-              <div className="text-xs font-black leading-none">FINLEY AI ADVISOR</div>
-              <div className="text-[9px] text-slate-950/80 font-bold">24/7 High School Finance Coach</div>
-            </div>
-            <MessageCircle className="w-4 h-4 ml-1 fill-slate-950" />
+            <Calculator className="w-4 h-4" />
+            <span>Calculators</span>
+          </button>
+
+          <button
+            onClick={() => onSelectTab('worksheets')}
+            className={`px-3.5 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'worksheets'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>Worksheets</span>
+          </button>
+
+          <button
+            onClick={() => onSelectTab('readiness')}
+            className={`px-3.5 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'readiness'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>My Progress</span>
+          </button>
+        </nav>
+
+        {/* RIGHT CONTROLS: PROGRESS & SOUND */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Subtle Progress Pill */}
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span className="text-slate-600 font-medium">
+              <strong className="text-slate-800">{userStats.completedModulesCount}</strong> of {userStats.totalModulesCount} completed
+            </span>
+          </div>
+
+          {/* Sound Toggle */}
+          <button
+            onClick={onToggleSound}
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+            title={soundEnabled ? 'Mute Sound' : 'Enable Sound'}
+            aria-label="Toggle Sound"
+          >
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-700" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
           </button>
         </div>
 
@@ -87,3 +133,4 @@ export const Header: React.FC<Props> = ({
     </header>
   );
 };
+

@@ -10,38 +10,38 @@ export const GenericModuleGame: React.FC<Props> = ({ moduleTitle, onCompleteGame
   const [completed, setCompleted] = useState(false);
 
   return (
-    <div className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl max-w-3xl mx-auto my-4 space-y-6 text-center">
-      <div className="inline-flex p-4 bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
-        <Lightbulb className="w-8 h-8" />
+    <div className="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs max-w-3xl mx-auto my-4 space-y-6 text-center">
+      <div className="inline-flex p-3.5 bg-emerald-100 text-emerald-800 rounded-2xl border border-emerald-200/80">
+        <Lightbulb className="w-7 h-7 text-emerald-800" />
       </div>
 
-      <h3 className="text-2xl font-black text-white">{moduleTitle} Interactive Simulation</h3>
-      <p className="text-slate-300 text-sm max-w-lg mx-auto">
-        Test your practical decision-making skills and apply core principles to solve real-world scenario challenges!
+      <h3 className="text-xl font-bold text-slate-800">{moduleTitle} Interactive Practice</h3>
+      <p className="text-slate-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
+        Test your practical decision-making skills and apply core principles to solve this real-world scenario.
       </p>
 
       {!completed ? (
         <button
           onClick={() => setCompleted(true)}
-          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black px-8 py-4 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer flex items-center gap-2 mx-auto"
+          className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-2 mx-auto text-xs sm:text-sm"
         >
-          <Sparkles className="w-5 h-5" />
-          START INTERACTIVE GAME!
+          <Sparkles className="w-4 h-4" />
+          <span>Start Scenario Simulation</span>
         </button>
       ) : (
         <div className="space-y-4">
-          <div className="bg-emerald-950/80 border border-emerald-500/50 p-6 rounded-2xl text-emerald-300 max-w-md mx-auto flex flex-col items-center gap-3">
-            <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-            <div className="font-black text-xl text-white">Interactive Scenario Mastered!</div>
-            <p className="text-xs text-emerald-200">You successfully applied key principles from {moduleTitle}. Great job!</p>
+          <div className="bg-emerald-50 border border-emerald-200 p-6 rounded-2xl text-emerald-900 max-w-md mx-auto flex flex-col items-center gap-2.5">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+            <div className="font-bold text-base text-slate-800">Scenario Mastered!</div>
+            <p className="text-xs text-slate-600">You successfully applied key principles from {moduleTitle}. Great job!</p>
           </div>
 
           <button
             onClick={() => onCompleteGame(50, 50)}
-            className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black px-8 py-4 rounded-2xl shadow-xl transition-all hover:scale-105 cursor-pointer flex items-center gap-2 mx-auto"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2 mx-auto text-xs sm:text-sm"
           >
-            <Sparkles className="w-5 h-5" />
-            Claim Game Rewards (+50 Coins & +50 XP)
+            <Sparkles className="w-4 h-4" />
+            <span>Complete Practice & Continue</span>
           </button>
         </div>
       )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraduationCap, Volume2, VolumeX, CheckCircle2, BookOpen, Calculator, FileText, ShieldCheck, Sparkles } from 'lucide-react';
+import { GraduationCap, Volume2, VolumeX, CheckCircle2, BookOpen, Calculator, FileText, ShieldCheck } from 'lucide-react';
 import { UserStats } from '../types';
 import { MainTab } from './TopNav';
 
@@ -7,7 +7,6 @@ interface Props {
   userStats: UserStats;
   activeTab: MainTab;
   onSelectTab: (tab: MainTab) => void;
-  onOpenAiTutor: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
 }
@@ -16,7 +15,6 @@ export const Header: React.FC<Props> = ({
   userStats,
   activeTab,
   onSelectTab,
-  onOpenAiTutor,
   soundEnabled,
   onToggleSound,
 }) => {

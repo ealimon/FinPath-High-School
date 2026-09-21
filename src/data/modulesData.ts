@@ -5,7 +5,7 @@ export const MODULES_DATA: ModuleData[] = [
     id: 1,
     title: 'First Job, Taxes, W-2 & 1099 Paychecks',
     subtitle: 'W-4 VS W-9, W-2 VS 1099-NEC, FICA & GROSS VS NET PAY',
-    status: 'DONE',
+    status: 'AVAILABLE',
     tag: 'TAXES & PAY',
     category: 'Earning',
     learningConcepts: [
